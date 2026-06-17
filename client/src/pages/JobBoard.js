@@ -4,6 +4,7 @@ import { statesAndLGAs, subjects } from '../data/data';
 
 export default function JobBoard() {
   const [jobs, setJobs] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [lgas, setLgas] = useState([]);
   const [filters, setFilters] = useState({
     state: '',
