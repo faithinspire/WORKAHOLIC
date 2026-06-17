@@ -9,9 +9,7 @@ export default function Messages() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const currentUserId = localStorage.getItem('userId');
-  const currentUserName = localStorage.getItem('userName') || 'You';
 
   useEffect(() => {
     fetchConversations();
@@ -19,6 +17,7 @@ export default function Messages() {
       setSelectedConversation(userId);
       fetchMessages(userId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const fetchConversations = async () => {

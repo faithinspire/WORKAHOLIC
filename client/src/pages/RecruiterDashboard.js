@@ -19,6 +19,7 @@ export default function RecruiterDashboard() {
 
   useEffect(() => {
     fetchRecruiterProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 export default function Navbar() {
   const isAuthenticated = localStorage.getItem('token');
   const userRole = localStorage.getItem('userRole');
-  const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const location = useLocation();
 
@@ -23,10 +22,6 @@ export default function Navbar() {
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
     window.location.href = '/';
-  };
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
   };
 
   // Mobile bottom navbar

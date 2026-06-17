@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 export default function MyPortfolio() {
   const [portfolio, setPortfolio] = useState(null);
@@ -14,10 +13,10 @@ export default function MyPortfolio() {
     qualification: '',
   });
   const currentUserId = localStorage.getItem('userId');
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchPortfolio();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchPortfolio = async () => {

@@ -14,6 +14,7 @@ export default function Portfolio() {
 
   useEffect(() => {
     fetchPortfolio();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const fetchPortfolio = async () => {

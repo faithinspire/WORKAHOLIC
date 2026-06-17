@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 export default function JobMatches() {
   const [matches, setMatches] = useState([]);
@@ -8,7 +7,6 @@ export default function JobMatches() {
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
   const currentUserId = localStorage.getItem('userId');
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchJobMatches();

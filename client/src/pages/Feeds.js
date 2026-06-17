@@ -10,7 +10,6 @@ export default function Feeds() {
   const [expandedComments, setExpandedComments] = useState(new Set());
   const [newComments, setNewComments] = useState({});
   const currentUserId = localStorage.getItem('userId');
-  const userName = localStorage.getItem('userName') || 'User';
 
   useEffect(() => {
     fetchPosts();

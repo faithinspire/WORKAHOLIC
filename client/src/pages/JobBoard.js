@@ -4,7 +4,6 @@ import { statesAndLGAs, subjects } from '../data/data';
 
 export default function JobBoard() {
   const [jobs, setJobs] = useState([]);
-  const [lgas, setLgas] = useState([]);
   const [filters, setFilters] = useState({
     state: '',
     educationLevel: '',
@@ -14,6 +13,7 @@ export default function JobBoard() {
 
   useEffect(() => {
     fetchJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

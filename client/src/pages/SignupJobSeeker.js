@@ -36,11 +36,6 @@ export default function SignupJobSeeker() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    setFormData(prev => ({ ...prev, [name]: files[0] }));
-  };
-
   const validateForm = () => {
     if (!formData.email || !formData.password || !formData.fullname) {
       setError('Please fill all required fields');

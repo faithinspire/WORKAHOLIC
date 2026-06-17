@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 export default function SavedJobs() {
   const [savedJobs, setSavedJobs] = useState([]);
@@ -8,10 +7,10 @@ export default function SavedJobs() {
   const [error, setError] = useState('');
   const [sortBy, setSortBy] = useState('recent');
   const currentUserId = localStorage.getItem('userId');
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchSavedJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchSavedJobs = async () => {
