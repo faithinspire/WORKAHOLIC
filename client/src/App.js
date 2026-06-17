@@ -12,6 +12,10 @@ import PostJob from './pages/PostJob';
 import Portfolio from './pages/Portfolio';
 import Messages from './pages/Messages';
 import Feeds from './pages/Feeds';
+import JobMatches from './pages/JobMatches';
+import MyPortfolio from './pages/MyPortfolio';
+import Applications from './pages/Applications';
+import SavedJobs from './pages/SavedJobs';
 
 function App() {
   return (
@@ -30,6 +34,10 @@ function App() {
           <Route path="/portfolio/:userId?" element={<Portfolio />} />
           <Route path="/messages/:userId?" element={<Messages />} />
           <Route path="/feeds" element={<Feeds />} />
+          <Route path="/job-matches" element={<JobMatches />} />
+          <Route path="/my-portfolio" element={<MyPortfolio />} />
+          <Route path="/applications" element={<Applications />} />
+          <Route path="/saved-jobs" element={<SavedJobs />} />
         </Routes>
       </div>
     </Router>
