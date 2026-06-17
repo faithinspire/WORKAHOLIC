@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Jobs - WORKAHOLIC</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #D85E2E;
+            --secondary: #004E89;
+            --accent: #F7931E;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            width: 250px;
+            overflow-y: auto;
+        }
+
+        .sidebar-brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            color: #666;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary);
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .job-card {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .remove-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .job-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            padding-right: 40px;
+        }
+
+        .job-company {
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .job-location {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .job-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .job-salary {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                z-index: 100;
+                box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .job-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-brand">🎓 WORKAHOLIC</div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="/jobseeker-dashboard-feed.html" class="sidebar-link">
+                        <i class="fas fa-home"></i> Home Feed
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/jobseeker-dashboard.html" class="sidebar-link">
+                        <i class="fas fa-briefcase"></i> Job Matches
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/portfolio.html" class="sidebar-link">
+                        <i class="fas fa-user-circle"></i> My Portfolio
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/applications.html" class="sidebar-link">
+                        <i class="fas fa-paper-plane"></i> Applications
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/saved-jobs.html" class="sidebar-link active">
+                        <i class="fas fa-bookmark"></i> Saved Jobs
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/messages.html" class="sidebar-link">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                </li>
+                <li class="sidebar-item" style="border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px;">
+                    <a href="#" onclick="logout()" class="sidebar-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <div class="header">
+                <h1>⭐ Saved Jobs</h1>
+                <p>Your bookmarked job opportunities</p>
+            </div>
+
+            <div class="card">
+                <h2>Saved Opportunities</h2>
+                <div class="job-grid" id="savedJobsGrid">
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i class="fas fa-bookmark"></i>
+                        <p>You haven't saved any jobs yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        function displaySavedJobs(jobs) {
+            if (!jobs || jobs.length === 0) {
+                document.getElementById('savedJobsGrid').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-bookmark"></i><p>No saved jobs yet. Start saving jobs you\'re interested in!</p></div>';
+                return;
+            }
+
+            const html = jobs.map((job, idx) => `
+                <div class="job-card">
+                    <button class="remove-btn" onclick="removeSavedJob(${idx})" title="Remove">×</button>
+                    <div class="job-title">${job.title || 'Job Title'}</div>
+                    <div class="job-company">${job.company_name || 'Company'}</div>
+                    <div class="job-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${job.location || 'Location TBD'}
+                    </div>
+                    <div class="job-description">${(job.description || 'Job description').substring(0, 100)}...</div>
+                    <div class="job-salary">₦${job.salary ? job.salary.toLocaleString() : 'Negotiable'}</div>
+                    <div class="job-actions">
+                        <button class="btn btn-primary" onclick="applyJob('${job.id}')">Apply Now</button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('savedJobsGrid').innerHTML = html;
+        }
+
+        function removeSavedJob(idx) {
+            const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+            saved.splice(idx, 1);
+            localStorage.setItem('savedJobs', JSON.stringify(saved));
+            displaySavedJobs(saved);
+        }
+
+        function applyJob(jobId) {
+            alert('Application submitted! Good luck!');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/index.html';
+            }
+        }
+
+        window.addEventListener('load', () => {
+            const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+            displaySavedJobs(saved);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Sign Up - WORKAHOLIC</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #D85E2E;
+            --accent: #F7931E;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        h1 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .pricing-info {
+            background: linear-gradient(135deg, #FFF5E6 0%, #FFE8CC 100%);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .pricing-info h3 {
+            color: var(--primary);
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pricing-info p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+
+        .pricing-highlight {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255,107,53,0.3);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: gap 0.3s;
+        }
+
+        .back-btn:hover {
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🎓</div>
+                <div class="logo-text">WORKAHOLIC</div>
+            </div>
+            <h1>Recruiter Sign Up</h1>
+            <p class="subtitle">Post jobs and hire talent</p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="pricing-info">
+            <h3><i class="fas fa-info-circle"></i> Pricing Plan</h3>
+            <p><strong>First Hire:</strong> FREE</p>
+            <p><strong>After That:</strong> ₦5,000/month for unlimited hires</p>
+            <div class="pricing-highlight">Cancel anytime, no long-term contract</div>
+        </div>
+
+        <form id="recruiterForm">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="fullname" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" name="company_name" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Institution Type</label>
+                    <select name="institution_type" required>
+                        <option value="">Select Type</option>
+                        <option value="school">School</option>
+                        <option value="university">University</option>
+                        <option value="training">Training Center</option>
+                        <option value="corporate">Corporate</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>State/Location</label>
+                    <input type="text" name="state" placeholder="e.g. Lagos, Abuja" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Company Description</label>
+                <textarea name="company_description" rows="3" placeholder="Tell us about your company..."></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="password_confirm" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Create Recruiter Account</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/index.html">Login here</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        document.getElementById('recruiterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageDiv = document.getElementById('message');
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            // Validate passwords match
+            if (data.password !== data.password_confirm) {
+                messageDiv.className = 'message error';
+                messageDiv.textContent = '❌ Passwords do not match';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/recruiter/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fullname: data.fullname,
+                        email: data.email,
+                        phone: data.phone,
+                        company_name: data.company_name,
+                        institution_type: data.institution_type,
+                        state: data.state,
+                        password: data.password,
+                        role: 'recruiter',
+                        company_description: data.company_description,
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.token) {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = '✅ Account created! Redirecting to dashboard...';
+                    localStorage.setItem('token', result.token);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    setTimeout(() => {
+                        window.location.href = '/dash-start.html';
+                    }, 2000);
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.textContent = '❌ ' + (result.message || 'Signup failed');
+                }
+            } catch (err) {
+                messageDiv.className = 'message error';
+                messageDiv.textContent = '❌ Error: ' + err.message;
+            }
+        });
+    </script>
+</body>
+</html>

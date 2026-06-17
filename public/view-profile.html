@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - WORKAHOLIC</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #D85E2E;
+            --secondary: #004E89;
+            --accent: #F7931E;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        /* PROFILE HEADER */
+        .profile-header {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px 12px 0 0;
+        }
+
+        .profile-content {
+            position: relative;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            align-items: start;
+            padding-top: 40px;
+        }
+
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 56px;
+            font-weight: bold;
+            border: 5px solid white;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .profile-info h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .profile-title {
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .profile-bio {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .profile-meta {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .meta-item i {
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light);
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+            border-bottom: 2px solid var(--border);
+            background: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            background: white;
+            border: none;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* TAB CONTENT */
+        .tab-content {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .content-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        /* PORTFOLIO ITEMS */
+        .portfolio-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .portfolio-item {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .item-title {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .item-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .item-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* SKILLS */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* LOADING */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin: 0 auto;
+            }
+
+            .profile-meta {
+                justify-content: center;
+            }
+
+            .profile-actions {
+                flex-direction: row;
+            }
+
+            .profile-header {
+                padding: 20px;
+            }
+
+            .tab-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-button" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+
+        <!-- PROFILE HEADER -->
+        <div class="profile-header" id="profileHeader">
+            <div class="profile-content">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <div class="profile-info">
+                    <h1 id="profileName">Loading...</h1>
+                    <div class="profile-title" id="profileTitle">Professional Title</div>
+                    <div class="profile-bio" id="profileBio">Loading profile information...</div>
+                    <div class="profile-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span id="profileExp">Experience</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span id="profileLocation">Location</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span id="profileEducation">Education</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="btn btn-primary" onclick="sendMessage()">
+                        <i class="fas fa-envelope"></i> Send Message
+                    </button>
+                    <button class="btn btn-secondary" onclick="viewportfolio()">
+                        <i class="fas fa-briefcase"></i> View Portfolio
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('about')">About</button>
+            <button class="tab" onclick="showTab('experience')">Experience</button>
+            <button class="tab" onclick="showTab('skills')">Skills</button>
+            <button class="tab" onclick="showTab('portfolio')">Portfolio</button>
+        </div>
+
+        <!-- TAB CONTENTS -->
+        <!-- ABOUT TAB -->
+        <div class="tab-content active" id="aboutTab">
+            <div class="content-section">
+                <div class="section-title">Professional Summary</div>
+                <p id="aboutContent" style="color: #666; line-height: 1.6;">Loading...</p>
+            </div>
+            <div class="content-section">
+                <div class="section-title">Job Preferences</div>
+                <div class="portfolio-grid">
+                    <div class="portfolio-item">
+                        <div class="item-title">Looking For</div>
+                        <div class="item-subtitle" id="desiredJob">Teaching positions</div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="item-title">Availability</div>
+                        <div class="item-subtitle" id="availability">Immediately</div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="item-title">Work Type</div>
+                        <div class="item-subtitle" id="workType">Full-Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPERIENCE TAB -->
+        <div class="tab-content" id="experienceTab">
+            <div class="portfolio-grid" id="experienceList">
+                <p style="color: #999; text-align: center;">No experience listed</p>
+            </div>
+        </div>
+
+        <!-- SKILLS TAB -->
+        <div class="tab-content" id="skillsTab">
+            <div class="section-title">Professional Skills</div>
+            <div class="skills-grid" id="skillsList">
+                <p style="color: #999; text-align: center; grid-column: 1 / -1;">No skills listed</p>
+            </div>
+        </div>
+
+        <!-- PORTFOLIO TAB -->
+        <div class="tab-content" id="portfolioTab">
+            <div class="content-section">
+                <div class="section-title">Certifications</div>
+                <div class="portfolio-grid" id="certsList">
+                    <p style="color: #999; text-align: center;">No certifications</p>
+                </div>
+            </div>
+            <div class="content-section">
+                <div class="section-title">Resume</div>
+                <div id="resumeSection" style="text-align: center; color: #999;">
+                    No resume uploaded
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id');
+        const userName = urlParams.get('name');
+
+        let profileData = {};
+
+        async function loadProfile() {
+            try {
+                // Try to load from API
+                const res = await fetch(`${API_BASE}/dashboard/portfolio/${userId}`);
+                if (res.ok) {
+                    profileData = await res.json();
+                } else {
+                    // Fallback data from localStorage
+                    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+                    profileData = {
+                        userId,
+                        fullname: userName || currentUser.fullname || 'User',
+                        professional_title: 'Professional',
+                        bio: 'Check out my portfolio',
+                        years_experience: 0,
+                        state: 'Nigeria'
+                    };
+                }
+
+                displayProfile();
+            } catch (err) {
+                console.error('Error loading profile:', err);
+                displayProfile();
+            }
+        }
+
+        function displayProfile() {
+            const name = profileData.fullname || userName || 'User';
+            const initial = name.charAt(0).toUpperCase();
+
+            document.getElementById('profileAvatar').textContent = initial;
+            document.getElementById('profileName').textContent = name;
+            document.getElementById('profileTitle').textContent = profileData.professional_title || 'Professional';
+            document.getElementById('profileBio').textContent = profileData.bio || 'Passionate professional in their field';
+            document.getElementById('profileExp').textContent = (profileData.years_experience || 0) + ' years experience';
+            document.getElementById('profileLocation').textContent = profileData.state || 'Nigeria';
+            document.getElementById('profileEducation').textContent = profileData.education_level || 'Education Details';
+
+            // About Tab
+            document.getElementById('aboutContent').textContent = profileData.bio || 'No bio provided';
+            document.getElementById('desiredJob').textContent = profileData.desired_job_title || 'Not specified';
+            document.getElementById('availability').textContent = profileData.availability || 'Flexible';
+            document.getElementById('workType').textContent = profileData.employment_type || 'Not specified';
+
+            // Experience Tab
+            if (profileData.experience && profileData.experience.length > 0) {
+                const html = profileData.experience.map(exp => `
+                    <div class="portfolio-item">
+                        <div class="item-title">${exp.title}</div>
+                        <div class="item-subtitle">${exp.company} • ${exp.start} to ${exp.end}</div>
+                        <div class="item-description">${exp.desc || 'Professional experience'}</div>
+                    </div>
+                `).join('');
+                document.getElementById('experienceList').innerHTML = html;
+            }
+
+            // Skills Tab
+            if (profileData.skills && profileData.skills.length > 0) {
+                const html = profileData.skills.map(skill => `
+                    <div class="skill-tag">${skill}</div>
+                `).join('');
+                document.getElementById('skillsList').innerHTML = html;
+            }
+
+            // Portfolio Tab
+            if (profileData.certificates && profileData.certificates.length > 0) {
+                const html = profileData.certificates.map(cert => `
+                    <div class="portfolio-item">
+                        <div class="item-title">${cert.name}</div>
+                        <div class="item-subtitle">${cert.org}</div>
+                        ${cert.fileName ? `<div class="item-description">📎 ${cert.fileName}</div>` : ''}
+                    </div>
+                `).join('');
+                document.getElementById('certsList').innerHTML = html;
+            }
+
+            if (profileData.resume) {
+                document.getElementById('resumeSection').innerHTML = `
+                    <div class="portfolio-item">
+                        <i class="fas fa-file-pdf" style="font-size: 32px; color: var(--primary); margin-bottom: 10px;"></i>
+                        <div class="item-title">Resume/CV</div>
+                        <button class="btn btn-primary" style="margin-top: 10px;" onclick="downloadResume()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function sendMessage() {
+            const name = profileData.fullname || userName || 'User';
+            alert(`Message ${name} feature coming soon!`);
+        }
+
+        function viewportfolio() {
+            alert('Full portfolio view feature coming soon!');
+        }
+
+        function downloadResume() {
+            alert('Resume download feature coming soon!');
+        }
+
+        window.addEventListener('load', loadProfile);
+    </script>
+</body>
+</html>

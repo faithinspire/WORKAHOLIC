@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Seeker Signup - WORKAHOLIC</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #D85E2E;
+            --secondary: #004E89;
+            --accent: #F7931E;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section-title i {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .form-group .required {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+            font-size: 13px;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-progress {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 16px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-grid.full {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1><i class="fas fa-user-graduate"></i> Professional Job Seeker Profile</h1>
+            <p>Complete your profile to connect with top employers and opportunities</p>
+        </div>
+
+        <!-- FORM -->
+        <div class="form-container">
+            <a class="back-link" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+
+            <div class="form-progress">
+                <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+            </div>
+
+            <div id="messageBox" class="message"></div>
+
+            <form id="signupForm">
+                <!-- PERSONAL INFORMATION -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-user"></i>
+                        Personal Information
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" id="fullname" required placeholder="Your full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Professional Title <span class="required">*</span></label>
+                            <input type="text" id="professionalTitle" required placeholder="e.g., Mathematics Teacher">
+                        </div>
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" id="email" required placeholder="your.email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="phone" required placeholder="+234 123 456 7890">
+                        </div>
+                        <div class="form-group">
+                            <label>State/Region <span class="required">*</span></label>
+                            <input type="text" id="state" required placeholder="e.g., Lagos">
+                        </div>
+                        <div class="form-group">
+                            <label>Password <span class="required">*</span></label>
+                            <input type="password" id="password" required placeholder="Strong password">
+                            <div class="help-text">At least 8 characters, numbers and letters</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROFESSIONAL BACKGROUND -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-briefcase"></i>
+                        Professional Background
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Years of Experience <span class="required">*</span></label>
+                            <select id="yearsExperience" required>
+                                <option value="">Select experience level</option>
+                                <option value="0">No experience (Fresh graduate)</option>
+                                <option value="1">1-2 years</option>
+                                <option value="3">3-5 years</option>
+                                <option value="6">6-10 years</option>
+                                <option value="11">11+ years</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Highest Education Level <span class="required">*</span></label>
+                            <select id="educationLevel" required>
+                                <option value="">Select education level</option>
+                                <option value="secondary">Secondary School</option>
+                                <option value="diploma">Diploma</option>
+                                <option value="bachelor">Bachelor's Degree</option>
+                                <option value="master">Master's Degree</option>
+                                <option value="phd">PhD</option>
+                            </select>
+                        </div>
+                        <div class="form-group full">
+                            <label>Field of Study/Specialization <span class="required">*</span></label>
+                            <input type="text" id="fieldOfStudy" required placeholder="e.g., Mathematics, English, Computer Science">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JOB PREFERENCES -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-target"></i>
+                        Job Preferences
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Desired Job Title <span class="required">*</span></label>
+                            <input type="text" id="desiredJobTitle" required placeholder="Position you're seeking">
+                        </div>
+                        <div class="form-group">
+                            <label>Job Category <span class="required">*</span></label>
+                            <select id="jobCategory" required>
+                                <option value="">Select category</option>
+                                <option value="teaching">Teaching/Education</option>
+                                <option value="lecturing">Lecturing/Academic</option>
+                                <option value="professional">Professional Services</option>
+                                <option value="tech">Technology</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Employment Type <span class="required">*</span></label>
+                            <select id="employmentType" required>
+                                <option value="">Select employment type</option>
+                                <option value="fulltime">Full-Time</option>
+                                <option value="parttime">Part-Time</option>
+                                <option value="contract">Contract</option>
+                                <option value="freelance">Freelance</option>
+                                <option value="any">Any</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Expected Salary Range (Annual)</label>
+                            <input type="text" id="desiredSalary" placeholder="e.g., ₦2,000,000 - ₦3,500,000">
+                        </div>
+                        <div class="form-group">
+                            <label>Availability <span class="required">*</span></label>
+                            <select id="availability" required>
+                                <option value="">When can you start?</option>
+                                <option value="immediate">Immediately</option>
+                                <option value="2weeks">In 2 weeks</option>
+                                <option value="1month">In 1 month</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid full">
+                        <div class="form-group">
+                            <label>Preferred Work Locations</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="remotely" value="Remote">
+                                    <label for="remotely">Remote/Online</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="onsite" value="On-site">
+                                    <label for="onsite">On-site</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hybrid" value="Hybrid">
+                                    <label for="hybrid">Hybrid</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUALIFICATIONS & CERTIFICATIONS -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-certificate"></i>
+                        Qualifications & Certifications
+                    </div>
+                    <div class="form-grid full">
+                        <div class="form-group">
+                            <label>Certifications & Licenses (comma-separated)</label>
+                            <textarea id="certifications" placeholder="e.g., PGDE, NYSC Certificate, Teaching License, Professional Certifications"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-grid full">
+                        <div class="form-group">
+                            <label>Key Skills & Competencies (comma-separated)</label>
+                            <textarea id="skills" placeholder="e.g., Curriculum Development, Student Assessment, Educational Technology, Leadership, Communication"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABOUT & BIO -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-edit"></i>
+                        About You
+                    </div>
+                    <div class="form-grid full">
+                        <div class="form-group">
+                            <label>Professional Bio <span class="required">*</span></label>
+                            <textarea id="bio" required placeholder="Tell employers about yourself, your achievements, teaching philosophy, and what you're looking for in your next role. (200-500 characters)"></textarea>
+                            <div class="help-text">Describe your professional background and career goals</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="window.location.href='/index.html'">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-check"></i> Create Professional Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                fullname: document.getElementById('fullname').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                password: document.getElementById('password').value,
+                role: 'jobseeker',
+                professional_title: document.getElementById('professionalTitle').value,
+                years_experience: document.getElementById('yearsExperience').value,
+                education_level: document.getElementById('educationLevel').value,
+                field_of_study: document.getElementById('fieldOfStudy').value,
+                desired_job_title: document.getElementById('desiredJobTitle').value,
+                job_category: document.getElementById('jobCategory').value,
+                employment_type: document.getElementById('employmentType').value,
+                desired_salary: document.getElementById('desiredSalary').value,
+                availability: document.getElementById('availability').value,
+                state: document.getElementById('state').value,
+                certifications: document.getElementById('certifications').value,
+                skills: document.getElementById('skills').value,
+                bio: document.getElementById('bio').value,
+                preferred_locations: [
+                    document.getElementById('remotely').checked ? 'Remote' : null,
+                    document.getElementById('onsite').checked ? 'On-site' : null,
+                    document.getElementById('hybrid').checked ? 'Hybrid' : null
+                ].filter(Boolean)
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage('✅ Account created successfully! Redirecting to login...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 2000);
+                } else {
+                    showMessage('❌ ' + (data.message || 'Signup failed'), 'error');
+                }
+            } catch (err) {
+                showMessage('❌ Error: ' + err.message, 'error');
+            }
+        });
+
+        function showMessage(msg, type) {
+            const box = document.getElementById('messageBox');
+            box.className = `message ${type}`;
+            box.textContent = msg;
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>

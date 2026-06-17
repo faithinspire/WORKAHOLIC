@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORKAHOLIC - Teaching & Jobs Platform Nigeria</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #D85E2E;
+            --secondary: #004E89;
+            --accent: #F7931E;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #FAFAFA;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            gap: 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* HERO WITH IMAGE */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .hero-text {
+            padding: 60px 40px;
+            color: white;
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hero-buttons button {
+            padding: 15px 40px;
+            font-size: 16px;
+        }
+
+        .hero-image {
+            height: 100%;
+            min-height: 400px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* NEWS SECTION */
+        .news-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 30px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        #newsContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .news-image {
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .news-content {
+            padding: 20px;
+        }
+
+        .news-category {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .news-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .news-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .news-source {
+            font-size: 12px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .news-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* SIGNUP */
+        .signup-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 60px;
+            display: none;
+        }
+
+        .signup-section.active {
+            display: block;
+        }
+
+        .signup-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-buttons {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-buttons button {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        /* LOGIN */
+        .login-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            max-width: 500px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .login-section.active {
+            display: block;
+        }
+
+        /* WHATSAPP */
+        .whatsapp-chatbox {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+            cursor: pointer;
+        }
+
+        .whatsapp-bubble {
+            width: 65px;
+            height: 65px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: transform 0.3s;
+        }
+
+        .whatsapp-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .whatsapp-tooltip {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            font-size: 14px;
+            white-space: nowrap;
+            display: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .whatsapp-chatbox:hover .whatsapp-tooltip {
+            display: block;
+        }
+
+        /* MESSAGE */
+        .message {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-section {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text {
+                padding: 40px 20px;
+            }
+
+            .hero-text h1 {
+                font-size: 36px;
+            }
+
+            .signup-form {
+                grid-template-columns: 1fr;
+            }
+
+            #newsContainer {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="navbar-container">
+            <div class="logo-section">
+                <span>🎓 WORKAHOLIC</span>
+            </div>
+            <div class="nav-links">
+                <a onclick="showSection('home')">Home</a>
+                <a onclick="showSection('feed')">Community Feed</a>
+                <a onclick="showSection('news')">News</a>
+                <a onclick="showSection('signup')">Sign Up</a>
+                <a onclick="showSection('login')">Login</a>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn-secondary" onclick="showSection('login')">Login</button>
+                <button class="btn-primary" onclick="showSection('signup')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTAINER -->
+    <div class="container">
+        <!-- HERO WITH IMAGE -->
+        <div id="heroSection">
+            <div class="hero-section">
+                <div class="hero-text">
+                    <h1>Welcome to WORKAHOLIC</h1>
+                    <p>Nigeria's leading platform for finding teaching, lecturing, and professional jobs</p>
+                    <div class="hero-buttons">
+                        <button class="btn-secondary" onclick="window.location.href='/signup-jobseeker.html'">Find Jobs</button>
+                        <button class="btn-primary" onclick="window.location.href='/recruiter-signup.html'">Post a Job</button>
+                    </div>
+                </div>
+                <div class="hero-image" style="background-image: url('/IMAGES/JOB.jpg');"></div>
+            </div>
+
+            <!-- NEWS -->
+            <div class="news-section">
+                <div class="section-title">
+                    <i class="fas fa-newspaper"></i>
+                    Latest News & Updates
+                </div>
+                <div id="newsContainer">
+                    <p style="text-align: center; padding: 40px; grid-column: 1 / -1; color: #999;">Loading news...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIGNUP -->
+        <div id="signupSection" class="signup-section">
+            <h2 style="margin-bottom: 20px;">Create Your Account</h2>
+            <div id="signupMessage" class="message"></div>
+            <form id="signupForm" class="signup-form">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <select id="signupRole" required>
+                        <option value="">Select Type</option>
+                        <option value="jobseeker">Job Seeker (Professional Form)</option>
+                        <option value="recruiter">Recruiter</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="signupPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="signupCategory">
+                        <option value="teaching">Teaching</option>
+                        <option value="tech">Tech</option>
+                        <option value="freelance">Freelance</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn-primary">Create Account</button>
+                    <button type="button" class="btn-secondary" onclick="showSection('home')">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- COMMUNITY FEED SECTION -->
+        <div id="feedSection" class="signup-section" style="display: none; max-width: none;">
+            <h2 style="margin-bottom: 20px;">🌐 Community Feed - Connect With Professionals</h2>
+            <div id="feedContainer" style="background: white; border-radius: 8px; padding: 20px; min-height: 500px;">
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    <p style="margin-bottom: 20px;"><i class="fas fa-comments" style="font-size: 32px; color: var(--primary);"></i></p>
+                    <p>Join our community to interact with professionals</p>
+                    <button class="btn-primary" onclick="loginForFeed()" style="margin-top: 15px;">
+                        Login to View Feed
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="loginSection" class="login-section">
+            <h2 style="margin-bottom: 20px; text-align: center;">Login</h2>
+            <div id="loginMessage" class="message"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn-primary">Login</button>
+                    <button type="button" class="btn-secondary" onclick="showSection('home')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- WHATSAPP -->
+    <div class="whatsapp-chatbox" onclick="openWhatsApp()">
+        <div class="whatsapp-bubble">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="whatsapp-tooltip">Chat with Admin</div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        const ADMIN_PHONE = '08133050594';
+
+        function showSection(section) {
+            document.getElementById('heroSection').style.display = section === 'home' ? 'block' : 'none';
+            document.getElementById('signupSection').classList.toggle('active', section === 'signup');
+            document.getElementById('loginSection').classList.toggle('active', section === 'login');
+            document.getElementById('feedSection').style.display = section === 'feed' ? 'block' : 'none';
+            
+            if (section === 'news') {
+                loadNewsUpdates();
+            }
+        }
+
+        function loginForFeed() {
+            showSection('login');
+        }
+
+        function openWhatsApp() {
+            const msg = encodeURIComponent('Hi, I want to know more about WORKAHOLIC');
+            window.open(`https://wa.me/${ADMIN_PHONE}?text=${msg}`, '_blank');
+        }
+
+        function loadNewsUpdates() {
+            fetch(`${API_BASE}/external-news/all`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.news && data.news.length > 0) {
+                        const html = data.news.slice(0, 6).map(n => `
+                            <div class="news-card">
+                                <div class="news-image"><i class="fas fa-newspaper"></i></div>
+                                <div class="news-content">
+                                    <div class="news-category">${n.category || 'News'}</div>
+                                    <div class="news-title">${n.title}</div>
+                                    <div class="news-description">${n.description || ''}</div>
+                                    <div class="news-meta">
+                                        <span class="news-source">${n.source || 'WORKAHOLIC'}</span>
+                                        <span class="news-date">${new Date(n.published_at).toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                        document.getElementById('newsContainer').innerHTML = html;
+                    }
+                })
+                .catch(err => {
+                    console.error('News error:', err);
+                    document.getElementById('newsContainer').innerHTML = '<p style="text-align: center; color: #999; grid-column: 1 / -1;">Failed to load news</p>';
+                });
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const role = document.getElementById('signupRole').value;
+            
+            if (role === 'jobseeker') {
+                // Redirect to professional job seeker signup form
+                window.location.href = '/signup-jobseeker.html';
+                return;
+            }
+            
+            const endpoint = '/auth/recruiter/signup';
+            
+            try {
+                const res = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fullname: document.getElementById('signupName').value,
+                        email: document.getElementById('signupEmail').value,
+                        phone: document.getElementById('signupPhone').value,
+                        password: document.getElementById('signupPassword').value,
+                        company_name: document.getElementById('signupName').value,
+                        role: role
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    document.getElementById('signupMessage').className = 'message success';
+                    document.getElementById('signupMessage').textContent = '✅ Account created! Logging in...';
+                    setTimeout(() => showSection('login'), 1500);
+                } else {
+                    throw new Error(data.message || 'Signup failed');
+                }
+            } catch (err) {
+                document.getElementById('signupMessage').className = 'message error';
+                document.getElementById('signupMessage').textContent = '❌ ' + err.message;
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('loginEmail').value,
+                        password: document.getElementById('loginPassword').value
+                    })
+                });
+                const data = await res.json();
+                if (res.ok && data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    // Redirect to feed dashboard for recruiters
+                    window.location.href = data.user.role === 'recruiter' ? '/recruiter-dashboard-feed.html' : '/jobseeker-dashboard-feed.html';
+                } else {
+                    throw new Error(data.message || 'Login failed');
+                }
+            } catch (err) {
+                document.getElementById('loginMessage').className = 'message error';
+                document.getElementById('loginMessage').textContent = '❌ ' + err.message;
+            }
+        });
+
+        window.addEventListener('load', loadNewsUpdates);
+        setInterval(loadNewsUpdates, 30 * 60 * 1000);
+    </script>
+</body>
+</html>

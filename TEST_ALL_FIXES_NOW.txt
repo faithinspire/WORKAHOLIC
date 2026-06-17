@@ -1,0 +1,372 @@
+================================================================================
+                    TEST ALL FIXES - COMPREHENSIVE GUIDE
+================================================================================
+
+🟢 SERVER: Running on port 5002
+📍 URL: http://localhost:5002
+✅ Status: All fixes applied
+
+================================================================================
+                        1. TEST LANDING PAGE FIX
+================================================================================
+
+ISSUE FIXED: Landing page showing raw JavaScript code
+
+TEST STEP 1: Go to fixed landing page
+- URL: http://localhost:5002/landing.html
+- Expected: Professional website (NOT raw JavaScript!)
+- Should see:
+  ✅ Hero section with title
+  ✅ "Find Jobs" button
+  ✅ "Post a Job" button
+  ✅ "Latest News & Updates" section
+  ✅ News loading
+  ✅ WhatsApp button (bottom-right)
+  ✅ Sign up form area
+  ✅ Login form area
+
+TEST STEP 2: Check for raw JavaScript
+- Open browser console (F12)
+- Should see no errors
+- News should be loading from API
+- Click through sections - should work smoothly
+
+TEST STEP 3: Mobile test
+- Resize browser to 375px width
+- Everything should be responsive
+- Buttons should be clickable
+- Forms should work
+
+✅ EXPECTED: Clean, professional website with no code showing
+
+================================================================================
+                        2. TEST PORTFOLIO SYSTEM
+================================================================================
+
+ISSUE FIXED: No portfolio system for uploading credentials
+
+TEST STEP 1: Create job seeker account
+- Go to: http://localhost:5002/landing.html
+- Click "Get Started"
+- Fill form:
+  - Name: Test Seeker
+  - Email: seeker@test.com
+  - Type: Job Seeker
+  - Password: Test123456
+- Click "Create Account"
+- Login with same credentials
+
+TEST STEP 2: Access portfolio
+- URL: http://localhost:5002/portfolio.html
+- Should see portfolio page with:
+  ✅ Profile Picture section with camera icon
+  ✅ Upload Photo button
+  ✅ About You section (Bio)
+  ✅ Skills section (Add skills)
+  ✅ Resume/CV upload area
+  ✅ Certificates upload area
+  ✅ Work Experience section
+  ✅ Comments section
+
+TEST STEP 3: Upload avatar
+- Click "Upload Photo" button
+- Select an image file
+- Preview should show immediately
+- Image should NOT be zoomed (test this carefully!)
+- Save button should work
+
+TEST STEP 4: Add skills
+- Type skill name (e.g. "Teaching")
+- Click "Add"
+- Skill should appear in list below
+- Can delete skills
+- Data saves automatically
+
+TEST STEP 5: Add certificate
+- Fill "Certificate Name" (e.g. "B.Ed")
+- Fill "Issuing Organization" (e.g. "University")
+- Upload PDF/document
+- Click "Add Certificate"
+- Certificate appears in list
+
+TEST STEP 6: Add experience
+- Fill Job Title (e.g. "Math Teacher")
+- Fill Company
+- Select start/end dates
+- Add description
+- Click "Add Experience"
+- Appears in list
+
+TEST STEP 7: Check Supabase save
+- API call: POST /api/dashboard/portfolio/:userId
+- Data should be saved
+- Refresh page - data should persist
+- Check browser console - should see success messages
+
+✅ EXPECTED: Full portfolio system working, all data saved to Supabase
+
+================================================================================
+                        3. TEST COMMENTS SYSTEM
+================================================================================
+
+ISSUE FIXED: Comments not opening, not responsive, can't type
+
+TEST STEP 1: Go to community feed
+- URL: http://localhost:5002/community-feed.html
+- Should see:
+  ✅ "Share Something" post form
+  ✅ Emoji picker buttons
+  ✅ Textarea for typing
+  ✅ Post button
+  ✅ Existing posts below
+
+TEST STEP 2: Create a post (to have something to comment on)
+- Click in textarea
+- Type: "This is a test post"
+- Click "Post"
+- Post should appear above with your name
+- Should show timestamp
+
+TEST STEP 3: Test comment form
+- Scroll down to see your post
+- Click the comment section
+- Should see comment input box
+- Type: "Great post!" in comment box
+- Comment box should be responsive
+- Should work on mobile size (375px)
+
+TEST STEP 4: Post comment
+- Click "Post" button next to comment
+- Comment should appear immediately
+- Should show:
+  ✅ Your name
+  ✅ Comment text
+  ✅ Timestamp
+  ✅ Like button
+
+TEST STEP 5: Test comment actions
+- Click "Like" on comment
+- Like count should increase
+- Comment should be in Supabase
+- Can delete own comments
+
+TEST STEP 6: Mobile responsive test
+- Resize browser to 320px width
+- Comment form should still be usable
+- Can still type and post
+- Layout should adapt
+
+TEST STEP 7: Check API
+- Open console
+- Should see API calls:
+  POST /api/feed/create (for post)
+  POST /api/feed/:id/comment (for comment)
+  GET /api/feed/:id/comments (to fetch)
+
+✅ EXPECTED: Comments fully working, responsive, can type and submit
+
+================================================================================
+                        4. TEST SUPABASE CONNECTION
+================================================================================
+
+ISSUE FIXED: App not connected to Supabase
+
+TEST STEP 1: Verify connection in logs
+- Server startup should show:
+  ✅ "PostgreSQL pool initialized"
+  ✅ "External news updated"
+  (May also show fallback message - that's OK)
+
+TEST STEP 2: Test data persistence
+- Post something to feed
+- Upload portfolio item
+- Add comment
+- API calls should work without errors
+
+TEST STEP 3: Check localStorage (fallback)
+- Open browser DevTools (F12)
+- Application → LocalStorage
+- Should see 'user' and 'token' saved
+- This is fallback storage
+
+TEST STEP 4: Verify Supabase REST API
+- Check `.env` file:
+  SUPABASE_URL=https://zzpxjmmtlophkllboncl.supabase.co ✅
+  SUPABASE_SERVICE_ROLE_KEY=eyJhbGc... ✅
+  DATABASE_URL=postgresql://... ✅
+
+TEST STEP 5: Test news from Supabase
+- Homepage should show news
+- News should update every 30 minutes
+- Can manually refresh: POST /api/external-news/refresh
+- Check API response for success
+
+✅ EXPECTED: Data persists in Supabase, fallback to local storage works
+
+================================================================================
+                        5. TEST RECRUITER HIRING & PAYMENT
+================================================================================
+
+ISSUE: Recruiters need notification system for hiring with payment
+
+TEST STEP 1: Create recruiter account
+- Go to: http://localhost:5002/recruiter-signup.html
+- Fill form:
+  - Name: Test Recruiter
+  - Email: recruiter@test.com
+  - Company: Test Company
+  - Password: Test123456
+- Login
+
+TEST STEP 2: Access recruiter dashboard
+- URL: http://localhost:5002/recruiter-dashboard.html
+- Should see:
+  ✅ "Interest Requests" section with badge (shows count: 3)
+  ✅ "Posted Jobs" section
+  ✅ "Applications" section
+  ✅ Statistics showing requests
+
+TEST STEP 3: View interest requests
+- Click "Interest Requests" or see badge showing "3 New"
+- Should list candidates interested in jobs
+- Each request shows:
+  ✅ Candidate info
+  ✅ Job they applied for
+  ✅ "View Profile" button
+  ✅ "Employ" button (HIRE THIS PERSON)
+  ✅ "Reject" button
+
+TEST STEP 4: Test employment (Hire candidate)
+- Click "Employ" button on first candidate
+- **First hire: Should be FREE** (using platform free tier)
+- Should see success message: "Candidate employed!"
+- Candidate disappears from requests
+
+TEST STEP 5: Test payment for additional hires
+- Click "Employ" on another candidate
+- **Second hire onwards: Should trigger payment**
+- Payment modal/form should appear
+- Should show Paystack integration:
+  ✅ Amount to pay
+  ✅ "Pay with Paystack" button
+  ✅ Paystack form opens
+  ✅ After payment: Hire confirmed
+
+TEST STEP 6: Check notifications
+- Dashboard should show notifications
+- "3 New Interest Requests" badge
+- Updates in real-time
+
+TEST STEP 7: Verify payment config
+- Check `.env` for Paystack keys:
+  PAYSTACK_SECRET_KEY=sk_live_... ✅
+  PAYSTACK_PUBLIC_KEY=pk_live_... ✅
+
+✅ EXPECTED: Recruiters can hire candidates, payment works for additional hires
+
+================================================================================
+                        QUICK TESTING CHECKLIST
+================================================================================
+
+Landing Page:
+□ No raw JavaScript showing
+□ Professional layout
+□ News loads
+□ Forms work
+□ Mobile responsive
+
+Portfolio:
+□ Can upload avatar (not zoomed!)
+□ Can add skills
+□ Can upload certificates
+□ Can add experience
+□ Data persists after refresh
+□ Visible to other users
+
+Comments:
+□ Comment form opens
+□ Can type in comment box
+□ Responsive on mobile
+□ Post button works
+□ Comments appear instantly
+□ Can like comments
+□ Can delete comments
+
+Supabase:
+□ Data saves to Supabase
+□ Fallback to localStorage works
+□ News API working
+□ All data persisted
+
+Recruiter Hiring:
+□ Interest requests show with badge
+□ Can see candidate details
+□ First hire is FREE
+□ Additional hires require payment
+□ Paystack integration works
+□ Payment successful = hire confirmed
+
+================================================================================
+                        IMPORTANT URLS
+================================================================================
+
+Landing Page (NEW):        http://localhost:5002/landing.html
+Portfolio (NEW):           http://localhost:5002/portfolio.html
+Community Feed (NEW):      http://localhost:5002/community-feed.html
+Recruiter Dashboard:       http://localhost:5002/recruiter-dashboard.html
+Job Seeker Dashboard:      http://localhost:5002/jobseeker-dashboard.html
+Admin:                     http://localhost:5002/admin.html
+API Health:                http://localhost:5002/api/health
+API News:                  http://localhost:5002/api/external-news/all
+
+================================================================================
+                        TROUBLESHOOTING
+================================================================================
+
+If portfolio data not saving:
+→ Check /api/dashboard/portfolio/:userId endpoint
+→ Verify user is logged in
+→ Check browser console for errors
+
+If comments not working:
+→ Check /api/feed/all loads posts
+→ Check /api/feed/:id/comment endpoint
+→ Verify user ID is sent with comment
+
+If Supabase not connecting:
+→ Check .env file has credentials
+→ Verify internet connection
+→ App should fallback to localStorage
+→ Check server console for errors
+
+If recruiter payment not working:
+→ Check Paystack keys in .env
+→ Verify first hire shows as free
+→ Second hire should trigger payment form
+→ Check browser console for payment errors
+
+================================================================================
+                        SUCCESS CRITERIA
+================================================================================
+
+All fixes are working when:
+✅ Landing page displays correctly (no JavaScript showing)
+✅ Portfolio system allows uploads and saves data
+✅ Comments can be typed, posted, and displayed
+✅ Avatar displays without zoom
+✅ Supabase saves all data
+✅ Recruiter can hire candidates
+✅ Payment triggers for additional hires
+✅ Mobile responsive on all pages
+✅ No errors in console
+✅ Data persists after page refresh
+
+================================================================================
+
+Date: June 17, 2026
+Platform: WORKAHOLIC v3.1
+Status: All fixes applied and ready for testing
+
+READY TO TEST - Go through each section above!
+
+================================================================================

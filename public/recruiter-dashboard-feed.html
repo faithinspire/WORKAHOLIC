@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Dashboard - WORKAHOLIC</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #D85E2E;
+            --secondary: #004E89;
+            --accent: #F7931E;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --border: #E0E0E0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            width: 250px;
+            overflow-y: auto;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            color: #666;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary);
+        }
+
+        .badge {
+            position: absolute;
+            right: 8px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-right: 300px;
+            padding: 20px;
+            border-right: 1px solid var(--border);
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .request-item {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--warning);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .request-info {
+            flex: 1;
+        }
+
+        .request-name {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .request-job {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sidebar-right {
+            background: white;
+            padding: 20px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            overflow-y: auto;
+            border-left: 1px solid var(--border);
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .bottom-navbar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            z-index: 98;
+        }
+
+        .bottom-navbar-items {
+            display: flex;
+            justify-content: space-around;
+            height: 70px;
+        }
+
+        .bottom-navbar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            color: #999;
+            flex: 1;
+            font-size: 20px;
+        }
+
+        .bottom-navbar-item.active,
+        .bottom-navbar-item:hover {
+            color: var(--primary);
+        }
+
+        .bottom-navbar-label {
+            font-size: 9px;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 250px 1fr;
+            }
+
+            .sidebar-right {
+                display: none;
+            }
+
+            .main-content {
+                margin-right: 0;
+                border-right: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                transition: left 0.3s;
+                z-index: 100;
+                box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            }
+
+            .sidebar-right {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-right: 0;
+                padding-bottom: 90px;
+            }
+
+            .bottom-navbar {
+                display: block;
+            }
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span>💼</span> WORKAHOLIC
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a class="sidebar-link active" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" onclick="showSection('requests')">
+                    <i class="fas fa-bell"></i> Interest Requests
+                    <span class="badge" id="requestBadge">0</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" onclick="showSection('jobs')">
+                    <i class="fas fa-briefcase"></i> Posted Jobs
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" onclick="showSection('applications')">
+                    <i class="fas fa-file-alt"></i> Applications
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" onclick="showSection('company')">
+                    <i class="fas fa-building"></i> Company Profile
+                </a>
+            </li>
+            <li class="sidebar-item" style="border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px;">
+                <a class="sidebar-link" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Welcome, <span id="companyName">Recruiter</span>!</h1>
+            <p id="headerDate"></p>
+        </div>
+
+        <div id="messageBox" class="message"></div>
+
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboardSection">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                <div class="stat-card" style="background: white; border-left: 4px solid var(--primary);">
+                    <div class="stat-label">Posted Jobs</div>
+                    <div class="stat-value" id="jobCount">0</div>
+                </div>
+                <div class="stat-card" style="background: white; border-left: 4px solid var(--success);">
+                    <div class="stat-label">New Interest Requests</div>
+                    <div class="stat-value" id="requestCount">0</div>
+                </div>
+                <div class="stat-card" style="background: white; border-left: 4px solid var(--warning);">
+                    <div class="stat-label">Applications</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card" style="background: white; border-left: 4px solid var(--accent);">
+                    <div class="stat-label">Candidates Hired</div>
+                    <div class="stat-value">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-title">Recent Interest Requests</div>
+                <div id="recentRequests"></div>
+            </div>
+        </div>
+
+        <!-- REQUESTS SECTION -->
+        <div id="requestsSection" style="display: none;">
+            <div class="card">
+                <div class="section-title">All Interest Requests</div>
+                <div id="allRequests"></div>
+            </div>
+        </div>
+
+        <!-- JOBS SECTION -->
+        <div id="jobsSection" style="display: none;">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="section-title" style="margin: 0;">My Posted Jobs</div>
+                    <button class="btn btn-primary" onclick="alert('Post new job feature coming soon')">
+                        <i class="fas fa-plus"></i> Post New Job
+                    </button>
+                </div>
+                <div id="postedJobs"></div>
+            </div>
+        </div>
+
+        <!-- COMPANY SECTION -->
+        <div id="companySection" style="display: none;">
+            <div class="card">
+                <div class="section-title">Company Profile</div>
+                <form id="companyForm">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Company Name</label>
+                        <input type="text" id="companyNameInput" placeholder="Company name" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Company Email</label>
+                        <input type="email" id="companyEmail" placeholder="Company email" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">About Company</label>
+                        <textarea id="companyAbout" placeholder="Tell us about your company" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; min-height: 100px;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Company Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDEBAR RIGHT - STATS -->
+    <div class="sidebar-right">
+        <div class="section-title"><i class="fas fa-chart-bar"></i> Quick Stats</div>
+        <div class="stat-card">
+            <div class="stat-label">Total Views</div>
+            <div class="stat-value">1.2K</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Profile Strength</div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
+                <div style="flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden;">
+                    <div style="width: 75%; height: 100%; background: var(--primary);"></div>
+                </div>
+                <span style="font-weight: 700; color: var(--primary);">75%</span>
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 30px;">
+            <i class="fas fa-fire"></i> Trending Candidates
+        </div>
+        <div class="stat-card" style="background: var(--light); border-left: none;">
+            <div style="font-weight: 600; color: var(--dark); margin-bottom: 5px;">Top Candidate</div>
+            <div style="font-size: 12px; color: #666;">Check interest requests</div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAVBAR FOR MOBILE -->
+    <div class="bottom-navbar">
+        <div class="bottom-navbar-items">
+            <a class="bottom-navbar-item active" onclick="showSection('dashboard')">
+                <i class="fas fa-home"></i>
+                <span class="bottom-navbar-label">Home</span>
+            </a>
+            <a class="bottom-navbar-item" onclick="showSection('requests')">
+                <i class="fas fa-bell"></i>
+                <span class="bottom-navbar-label">Requests</span>
+            </a>
+            <a class="bottom-navbar-item" onclick="showSection('jobs')">
+                <i class="fas fa-briefcase"></i>
+                <span class="bottom-navbar-label">Jobs</span>
+            </a>
+            <a class="bottom-navbar-item" onclick="showSection('company')">
+                <i class="fas fa-building"></i>
+                <span class="bottom-navbar-label">Company</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let currentUser = {};
+
+        async function init() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.id) {
+                window.location.href = '/index.html';
+                return;
+            }
+
+            currentUser = user;
+            document.getElementById('companyName').textContent = user.company_name || 'Recruiter';
+            document.getElementById('headerDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+            loadRequests();
+        }
+
+        async function loadRequests() {
+            try {
+                const res = await fetch(`${API_BASE}/dashboard/job-requests/recruiter/${currentUser.id}`);
+                const data = await res.json();
+                const requests = data.requests?.pending || [];
+                
+                document.getElementById('requestCount').textContent = requests.length;
+                document.getElementById('requestBadge').textContent = requests.length;
+
+                if (requests.length === 0) {
+                    const emptyHtml = '<p style="color: #999; text-align: center; padding: 20px;">No interest requests yet. When job seekers show interest in your jobs, they will appear here.</p>';
+                    document.getElementById('recentRequests').innerHTML = emptyHtml;
+                    document.getElementById('allRequests').innerHTML = emptyHtml;
+                    return;
+                }
+
+                const html = requests.map(req => `
+                    <div class="request-item">
+                        <div class="request-info">
+                            <div class="request-name">Interested Candidate</div>
+                            <div class="request-job">Job ID: ${req.jobId}</div>
+                            <div style="font-size: 12px; color: #999; margin-top: 5px;">${new Date(req.createdAt).toLocaleDateString()}</div>
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="viewProfile('${req.jobSeekerId}')">Profile</button>
+                            <button class="btn btn-success" onclick="document.currentRequestId='${req.id}'; document.currentCandidateId='${req.jobSeekerId}'; acceptRequest('${req.id}')">Employ</button>
+                            <button class="btn btn-danger" onclick="rejectRequest('${req.id}')">Reject</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('recentRequests').innerHTML = html;
+                document.getElementById('allRequests').innerHTML = html;
+            } catch (err) {
+                console.error('Error loading requests:', err);
+                document.getElementById('recentRequests').innerHTML = '<p style="color: #e74c3c; padding: 20px;">Error loading requests. Please refresh the page.</p>';
+            }
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('[id$="Section"]').forEach(el => el.style.display = 'none');
+            document.getElementById(section + 'Section').style.display = 'block';
+
+            document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+            event.target.closest('.sidebar-link')?.classList.add('active');
+        }
+
+        function viewProfile(userId) {
+            window.location.href = `/view-profile.html?id=${userId}`;
+        }
+
+        function acceptRequest(requestId) {
+            // Check if this is first hire (free)
+            const hireCount = JSON.parse(localStorage.getItem('recruiterHires') || '{}')[currentUser.id] || 0;
+            
+            if (hireCount === 0) {
+                // First hire is free
+                alert('🎉 Congratulations! Your first hire is FREE!');
+                confirmHire(requestId);
+            } else {
+                // Subsequent hires require payment
+                openPaystackPayment();
+            }
+        }
+
+        function openPaystackPayment() {
+            const amount = 5000; // ₦5,000 per hire
+            
+            fetch('/api/payment/paystack-key')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.key) {
+                        alert('❌ Paystack key not configured');
+                        return;
+                    }
+                    
+                    const handler = PaystackPop.setup({
+                        key: data.key,
+                        email: currentUser.email,
+                        amount: amount * 100, // Paystack uses cents
+                        currency: 'NGN',
+                        ref: `HIRE-${Date.now()}`,
+                        onClose: function() {
+                            alert('Payment cancelled.');
+                        },
+                        onSuccess: function(response) {
+                            // Verify payment on backend
+                            fetch('/api/payment/verify-paystack', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    reference: response.reference,
+                                    recruiter_id: currentUser.id,
+                                    candidate_id: document.currentCandidateId
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert('✅ Payment successful! Candidate hired.\nReference: ' + response.reference);
+                                    confirmHire(document.currentRequestId);
+                                } else {
+                                    alert('❌ Payment verification failed: ' + data.message);
+                                }
+                            });
+                        }
+                    });
+                    handler.openIframe();
+                })
+                .catch(err => {
+                    alert('Error initializing payment: ' + err.message);
+                });
+        }
+
+        function confirmHire(requestId) {
+            // Update hire count
+            const hires = JSON.parse(localStorage.getItem('recruiterHires') || '{}');
+            hires[currentUser.id] = (hires[currentUser.id] || 0) + 1;
+            localStorage.setItem('recruiterHires', JSON.stringify(hires));
+            
+            alert('Candidate successfully hired!');
+            loadRequests();
+        }
+
+        function rejectRequest(requestId) {
+            alert('Request rejected.');
+            loadRequests();
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/index.html';
+            }
+        }
+
+        document.getElementById('companyForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Company profile updated!');
+        });
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

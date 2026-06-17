@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - WORKAHOLIC</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #F7931E;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-right: 1px solid var(--border);
+            position: fixed;
+            height: 100vh;
+            width: 250px;
+            overflow-y: auto;
+        }
+
+        .sidebar-brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            color: #666;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary);
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        /* AVATAR */
+        .avatar-section {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            background: var(--light);
+        }
+
+        .avatar-actions {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #D85E2E;
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--primary);
+            border: 1px solid var(--border);
+            margin-right: 10px;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* CREDENTIALS */
+        .credentials-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .credential-item {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--primary);
+        }
+
+        .credential-info {
+            flex: 1;
+        }
+
+        .credential-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .credential-type {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .credential-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* UPLOAD FORM */
+        .upload-form {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px dashed var(--border);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .file-label:hover {
+            background: #D85E2E;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* GRID */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                transition: left 0.3s;
+                z-index: 100;
+                box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .avatar-section {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .comment-section {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .comment-form input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .comment-form button {
+            padding: 10px 20px;
+        }
+
+        .comment-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .comment-actions {
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .comment-actions button {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-brand">🎓 WORKAHOLIC</div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="/jobseeker-dashboard-feed.html" class="sidebar-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/portfolio.html" class="sidebar-link active">
+                        <i class="fas fa-briefcase"></i> Portfolio
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-star"></i> Saved Jobs
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-users"></i> Network
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main">
+            <div class="header">
+                <h1>My Portfolio</h1>
+                <p>Build your professional profile to attract recruiters</p>
+            </div>
+
+            <!-- AVATAR -->
+            <div class="card">
+                <h2>Profile Picture</h2>
+                <div class="avatar-section">
+                    <img id="avatarPreview" class="avatar-preview" src="https://via.placeholder.com/120" alt="Avatar">
+                    <div class="avatar-actions">
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                        <button class="btn btn-primary" onclick="document.getElementById('avatarInput').click()">
+                            <i class="fas fa-camera"></i> Upload Photo
+                        </button>
+                        <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                            <i class="fas fa-info-circle"></i> A professional photo helps recruiters know you better
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABOUT -->
+            <div class="card">
+                <h2>About You</h2>
+                <div id="aboutMessage" class="message"></div>
+                <form id="aboutForm">
+                    <div class="form-group">
+                        <label>Professional Title</label>
+                        <input type="text" id="title" placeholder="e.g. Teacher, Software Developer">
+                    </div>
+                    <div class="form-group">
+                        <label>About (Bio)</label>
+                        <textarea id="bio" placeholder="Tell recruiters about yourself, your experience, and what you're looking for..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save About</button>
+                </form>
+            </div>
+
+            <!-- SKILLS -->
+            <div class="card">
+                <h2>Skills</h2>
+                <div id="skillsMessage" class="message"></div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Add Skill</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="skillInput" placeholder="e.g. Teaching, Microsoft Office">
+                            <button type="button" class="btn btn-secondary" onclick="addSkill()" style="margin: 0;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="skillsList" class="credentials-list" style="margin-top: 20px;"></div>
+            </div>
+
+            <!-- RESUME -->
+            <div class="card">
+                <h2>Resume/CV</h2>
+                <div class="upload-form">
+                    <div class="file-input-wrapper">
+                        <label for="resumeInput" class="file-label">
+                            <i class="fas fa-upload"></i> Upload Resume (PDF)
+                        </label>
+                        <input type="file" id="resumeInput" accept=".pdf,.doc,.docx">
+                    </div>
+                    <div id="resumeName" class="file-name"></div>
+                </div>
+                <div id="resumePreview"></div>
+            </div>
+
+            <!-- CERTIFICATES -->
+            <div class="card">
+                <h2>Certificates & Credentials</h2>
+                <div class="upload-form">
+                    <div class="form-group">
+                        <label>Certificate Name</label>
+                        <input type="text" id="certName" placeholder="e.g. Bachelor's Degree in Education">
+                    </div>
+                    <div class="form-group">
+                        <label>Issuing Organization</label>
+                        <input type="text" id="certOrg" placeholder="e.g. University of Lagos">
+                    </div>
+                    <div class="file-input-wrapper">
+                        <label for="certInput" class="file-label">
+                            <i class="fas fa-upload"></i> Upload Certificate
+                        </label>
+                        <input type="file" id="certInput" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="addCertificate()" style="margin-top: 15px;">
+                        <i class="fas fa-plus"></i> Add Certificate
+                    </button>
+                </div>
+                <div id="certsList" class="credentials-list" style="margin-top: 20px;"></div>
+            </div>
+
+            <!-- EXPERIENCE -->
+            <div class="card">
+                <h2>Work Experience</h2>
+                <div class="upload-form" style="border: none; background: white;">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Job Title</label>
+                            <input type="text" id="expTitle" placeholder="e.g. Mathematics Teacher">
+                        </div>
+                        <div class="form-group">
+                            <label>Company</label>
+                            <input type="text" id="expCompany" placeholder="e.g. Government School">
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="month" id="expStart">
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="month" id="expEnd">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="expDesc" placeholder="Describe your responsibilities..."></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="addExperience()">
+                        <i class="fas fa-plus"></i> Add Experience
+                    </button>
+                </div>
+                <div id="expList" class="credentials-list" style="margin-top: 20px;"></div>
+            </div>
+
+            <!-- COMMENTS -->
+            <div class="card">
+                <h2>Comments & Reviews</h2>
+                <div class="comment-section">
+                    <div class="comment-form">
+                        <input type="text" id="commentInput" placeholder="Write a comment about your skills...">
+                        <button type="button" class="btn btn-primary" onclick="postComment()">Post</button>
+                    </div>
+                    <div id="commentsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let userPortfolio = {};
+        let userSkills = [];
+        let userCerts = [];
+        let userExp = [];
+        let portfolioComments = [];
+
+        // Load portfolio data from localStorage (no API call)
+        async function loadPortfolio() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.id) {
+                // Redirect to login if not logged in
+                setTimeout(() => {
+                    window.location.href = '/index.html';
+                }, 500);
+                return;
+            }
+
+            try {
+                // Try to load from localStorage first
+                const storedPortfolio = JSON.parse(localStorage.getItem(`portfolio_${user.id}`) || '{}');
+                if (storedPortfolio && Object.keys(storedPortfolio).length > 0) {
+                    userPortfolio = storedPortfolio;
+                    if (storedPortfolio.skills) userSkills = storedPortfolio.skills;
+                    if (storedPortfolio.certificates) userCerts = storedPortfolio.certificates;
+                    if (storedPortfolio.experience) userExp = storedPortfolio.experience;
+                    displayPortfolio();
+                } else {
+                    // Try API as fallback
+                    const res = await fetch(`${API_BASE}/dashboard/portfolio/${user.id}`, {
+                        signal: AbortSignal.timeout(3000) // 3 second timeout
+                    });
+                    if (res.ok) {
+                        userPortfolio = await res.json();
+                        displayPortfolio();
+                    }
+                }
+            } catch (err) {
+                console.warn('Portfolio load warning:', err.message);
+                // Use empty portfolio instead of showing error
+                displayPortfolio();
+            }
+        }
+
+        function displayPortfolio() {
+            if (userPortfolio.profileImage) {
+                document.getElementById('avatarPreview').src = userPortfolio.profileImage;
+            }
+            if (userPortfolio.skills && Array.isArray(userPortfolio.skills)) {
+                userSkills = userPortfolio.skills;
+                displaySkills();
+            }
+            if (userPortfolio.certificates && Array.isArray(userPortfolio.certificates)) {
+                userCerts = userPortfolio.certificates;
+                displayCerts();
+            }
+            if (userPortfolio.experience && Array.isArray(userPortfolio.experience)) {
+                userExp = userPortfolio.experience;
+                displayExp();
+            }
+        }
+
+        function displaySkills() {
+            const html = userSkills.map((s, i) => `
+                <div class="credential-item">
+                    <div class="credential-info">
+                        <div class="credential-name">${s}</div>
+                    </div>
+                    <div class="credential-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="deleteSkill(${i})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('skillsList').innerHTML = html;
+        }
+
+        function displayCerts() {
+            const html = userCerts.map((c, i) => `
+                <div class="credential-item">
+                    <div class="credential-info">
+                        <div class="credential-name">${c.name}</div>
+                        <div class="credential-type">${c.org}</div>
+                        ${c.fileName ? `<div class="credential-type" style="color: var(--primary); margin-top: 8px;">📎 ${c.fileName}</div>` : ''}
+                    </div>
+                    <div class="credential-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="downloadCert(${i})">Download</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="deleteCert(${i})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('certsList').innerHTML = html || '<p style="color: #999; text-align: center; padding: 20px;">No certificates uploaded yet</p>';
+        }
+
+        function displayExp() {
+            const html = userExp.map((e, i) => `
+                <div class="credential-item">
+                    <div class="credential-info">
+                        <div class="credential-name">${e.title}</div>
+                        <div class="credential-type">${e.company} • ${e.start} to ${e.end}</div>
+                    </div>
+                    <div class="credential-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="deleteExp(${i})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('expList').innerHTML = html;
+        }
+
+        function addSkill() {
+            const skill = document.getElementById('skillInput').value;
+            if (skill) {
+                userSkills.push(skill);
+                document.getElementById('skillInput').value = '';
+                displaySkills();
+                savePortfolio();
+            }
+        }
+
+        function deleteSkill(i) {
+            userSkills.splice(i, 1);
+            displaySkills();
+            savePortfolio();
+        }
+
+        let certificateFiles = {};
+        let resumeFile = null;
+
+        function handleResumeUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    resumeFile = {
+                        name: file.name,
+                        data: e.target.result,
+                        type: file.type,
+                        size: file.size
+                    };
+                    document.getElementById('resumeName').textContent = `✅ Uploaded: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+                    savePortfolio();
+                    showMessage('Resume uploaded successfully!', 'success', 'aboutMessage');
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function handleCertificateUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const certIndex = Date.now();
+                    certificateFiles[certIndex] = {
+                        name: file.name,
+                        data: e.target.result,
+                        type: file.type,
+                        size: file.size,
+                        uploadedAt: new Date()
+                    };
+                    document.getElementById('certInput').dataset.fileId = certIndex;
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function addCertificate() {
+            const name = document.getElementById('certName').value;
+            const org = document.getElementById('certOrg').value;
+            const fileId = document.getElementById('certInput').dataset.fileId;
+            
+            if (name && org && fileId && certificateFiles[fileId]) {
+                const cert = {
+                    name,
+                    org,
+                    fileId,
+                    fileName: certificateFiles[fileId].name,
+                    fileSize: certificateFiles[fileId].size
+                };
+                userCerts.push(cert);
+                document.getElementById('certName').value = '';
+                document.getElementById('certOrg').value = '';
+                document.getElementById('certInput').value = '';
+                delete document.getElementById('certInput').dataset.fileId;
+                displayCerts();
+                savePortfolio();
+                showMessage('Certificate added successfully!', 'success', 'aboutMessage');
+            } else if (!fileId) {
+                showMessage('❌ Please upload a certificate file', 'error', 'aboutMessage');
+            } else {
+                showMessage('❌ Please fill all fields', 'error', 'aboutMessage');
+            }
+        }
+
+        function deleteCert(i) {
+            const cert = userCerts[i];
+            if (cert.fileId && certificateFiles[cert.fileId]) {
+                delete certificateFiles[cert.fileId];
+            }
+            userCerts.splice(i, 1);
+            displayCerts();
+            savePortfolio();
+        }
+
+        function downloadCert(i) {
+            const cert = userCerts[i];
+            if (cert.fileId && certificateFiles[cert.fileId]) {
+                const file = certificateFiles[cert.fileId];
+                const link = document.createElement('a');
+                const blob = new Blob([file.data], { type: file.type });
+                link.href = URL.createObjectURL(blob);
+                link.download = file.name;
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
+        }
+
+        function addExperience() {
+            const exp = {
+                title: document.getElementById('expTitle').value,
+                company: document.getElementById('expCompany').value,
+                start: document.getElementById('expStart').value,
+                end: document.getElementById('expEnd').value,
+                desc: document.getElementById('expDesc').value
+            };
+            if (exp.title && exp.company) {
+                userExp.push(exp);
+                document.getElementById('expTitle').value = '';
+                document.getElementById('expCompany').value = '';
+                document.getElementById('expStart').value = '';
+                document.getElementById('expEnd').value = '';
+                document.getElementById('expDesc').value = '';
+                displayExp();
+                savePortfolio();
+            }
+        }
+
+        function deleteExp(i) {
+            userExp.splice(i, 1);
+            displayExp();
+            savePortfolio();
+        }
+
+        function postComment() {
+            const text = document.getElementById('commentInput').value;
+            if (text) {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                portfolioComments.push({
+                    author: user.fullname,
+                    text: text,
+                    date: new Date().toLocaleDateString()
+                });
+                document.getElementById('commentInput').value = '';
+                displayComments();
+            }
+        }
+
+        function displayComments() {
+            const html = portfolioComments.map(c => `
+                <div class="comment-item">
+                    <div class="comment-author">${c.author}</div>
+                    <div class="comment-text">${c.text}</div>
+                    <div class="comment-actions" style="color: #999; font-size: 12px;">
+                        ${c.date}
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('commentsList').innerHTML = html;
+        }
+
+        async function savePortfolio() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const data = {
+                user_id: user.id,
+                skills: userSkills,
+                certificates: userCerts,
+                experience: userExp,
+                about: document.getElementById('bio')?.value || '',
+                title: document.getElementById('title')?.value || '',
+                profileImage: userPortfolio.profileImage || null
+            };
+
+            // Save to localStorage first (immediate)
+            try {
+                localStorage.setItem(`portfolio_${user.id}`, JSON.stringify(data));
+                showMessage('Portfolio saved locally!', 'success', 'aboutMessage');
+            } catch (err) {
+                console.warn('localStorage save failed:', err.message);
+            }
+
+            // Try to save to API as well (backup)
+            try {
+                await fetch(`${API_BASE}/dashboard/portfolio/${user.id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                    signal: AbortSignal.timeout(3000)
+                });
+            } catch (err) {
+                console.warn('API save failed (using localStorage):', err.message);
+            }
+        }
+
+        function showMessage(text, type, elemId) {
+            const elem = document.getElementById(elemId);
+            elem.className = `message ${type}`;
+            elem.textContent = (type === 'success' ? '✅ ' : '❌ ') + text;
+            setTimeout(() => elem.className = 'message', 3000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/index.html';
+        }
+
+        // Avatar upload
+        document.getElementById('avatarInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                document.getElementById('avatarPreview').src = event.target.result;
+                userPortfolio.profileImage = event.target.result;
+                savePortfolio();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // About form
+        document.getElementById('aboutForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            savePortfolio();
+        });
+
+        window.addEventListener('load', loadPortfolio);
+    </script>
+</body>
+</html>
