@@ -47,6 +47,7 @@ export default function Applications() {
       minHeight: '100vh',
       background: 'linear-gradient(to bottom right, #f0f9ff, #e0e7ff)',
       padding: '2rem 1rem',
+      paddingBottom: 'calc(2rem + max(6rem, env(safe-area-inset-bottom)))',
     },
     wrapper: {
       maxWidth: '1000px',

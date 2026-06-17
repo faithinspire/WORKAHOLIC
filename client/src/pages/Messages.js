@@ -78,6 +78,7 @@ export default function Messages() {
       background: 'linear-gradient(to bottom right, #f0f9ff, #e0e7ff)',
       display: 'flex',
       padding: '1rem',
+      paddingBottom: 'calc(1rem + max(6rem, env(safe-area-inset-bottom)))',
     },
     wrapper: {
       width: '100%',

@@ -113,7 +113,7 @@ export default function Feeds() {
       minHeight: '100vh',
       background: 'linear-gradient(to bottom right, #f0f9ff, #e0e7ff)',
       paddingTop: '2rem',
-      paddingBottom: '2rem',
+      paddingBottom: 'calc(2rem + max(6rem, env(safe-area-inset-bottom)))',
     },
     wrapper: {
       maxWidth: '800px',

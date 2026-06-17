@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const isAuthenticated = localStorage.getItem('token');
   const userRole = localStorage.getItem('userRole');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -18,93 +29,395 @@ export default function Navbar() {
     setMenuOpen(!menuOpen);
   };
 
+  // Mobile bottom navbar
+  if (isMobile && isAuthenticated) {
+    const bottomNavStyle = {
+      container: {
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: '#f0f9ff',
+        borderTop: '1px solid #e5e7eb',
+        zIndex: 40,
+        paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+      },
+      grid: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, 1fr)',
+        gap: '0.5rem',
+        padding: '0.5rem',
+        maxWidth: '100%',
+      },
+      navItem: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0.75rem 0',
+        fontSize: '0.65rem',
+        fontWeight: '600',
+        textDecoration: 'none',
+        color: '#6b7280',
+        transition: 'all 0.2s',
+        borderRadius: '0.375rem',
+      },
+      navItemActive: {
+        color: '#2563eb',
+        background: '#dbeafe',
+      },
+      icon: {
+        fontSize: '1.25rem',
+        marginBottom: '0.25rem',
+      },
+    };
+
+    const isActive = (path) => location.pathname === path;
+
+    return (
+      <>
+        {/* Top navbar - minimal on mobile */}
+        <nav style={{
+          background: 'linear-gradient(to right, #2563eb, #4f46e5)',
+          color: 'white',
+          padding: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+        }}>
+          <Link to="/" style={{ fontSize: '1.25rem', fontWeight: 'bold', textDecoration: 'none', color: 'white' }}>
+            ✝️ FaithJobs
+          </Link>
+          <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>
+            {userRole ? `${userRole.charAt(0).toUpperCase()}` : 'A'}
+          </div>
+        </nav>
+
+        {/* Bottom Navigation */}
+        <div style={bottomNavStyle.container}>
+          <div style={bottomNavStyle.grid}>
+            {userRole === 'jobseeker' ? (
+              <>
+                <Link
+                  to="/job-matches"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/job-matches') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>💼</div>
+                  <span>Matches</span>
+                </Link>
+                <Link
+                  to="/applications"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/applications') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>📋</div>
+                  <span>Apps</span>
+                </Link>
+                <Link
+                  to="/my-portfolio"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/my-portfolio') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>👤</div>
+                  <span>Profile</span>
+                </Link>
+                <Link
+                  to="/feeds"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/feeds') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>📢</div>
+                  <span>Feed</span>
+                </Link>
+                <Link
+                  to="/messages"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/messages') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>💬</div>
+                  <span>Chat</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/jobs"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/jobs') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>🔍</div>
+                  <span>Browse</span>
+                </Link>
+                <Link
+                  to="/post-job"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/post-job') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>📝</div>
+                  <span>Post</span>
+                </Link>
+                <Link
+                  to="/feeds"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/feeds') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>📢</div>
+                  <span>Feed</span>
+                </Link>
+                <Link
+                  to="/messages"
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    ...(isActive('/messages') ? bottomNavStyle.navItemActive : {}),
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>💬</div>
+                  <span>Chat</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    ...bottomNavStyle.navItem,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#ef4444',
+                  }}
+                >
+                  <div style={bottomNavStyle.icon}>🚪</div>
+                  <span>Exit</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Add padding to body to account for bottom navbar */}
+        <div style={{ paddingBottom: '6rem' }} />
+      </>
+    );
+  }
+
+  // Desktop navbar
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-          ✝️ <span className="hidden sm:inline">FaithJobs</span>
+    <nav style={{
+      background: 'linear-gradient(to right, #2563eb, #4f46e5)',
+      color: 'white',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      position: 'sticky',
+      top: 0,
+      zIndex: 50,
+    }}>
+      <div style={{
+        maxWidth: '1280px',
+        margin: '0 auto',
+        padding: '1rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+        <Link
+          to="/"
+          style={{
+            fontSize: '1.75rem',
+            fontWeight: 'bold',
+            textDecoration: 'none',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+          }}
+        >
+          ✝️ <span>FaithJobs</span>
         </Link>
-        
+
         {/* Desktop Navigation */}
-        <div className="hidden md:flex gap-6 items-center">
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           {!isAuthenticated ? (
             <>
-              <Link to="/login" className="hover:bg-blue-700 px-3 py-2 rounded transition">Login</Link>
-              <Link to="/signup/jobseeker" className="hover:bg-blue-700 px-3 py-2 rounded transition">Job Seeker</Link>
-              <Link to="/signup/recruiter" className="hover:bg-blue-700 px-3 py-2 rounded transition">Recruiter</Link>
+              <Link
+                to="/login"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup/jobseeker"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+              >
+                Job Seeker
+              </Link>
+              <Link
+                to="/signup/recruiter"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+              >
+                Recruiter
+              </Link>
             </>
           ) : (
             <>
-              <Link to="/jobs" className="hover:bg-blue-700 px-3 py-2 rounded transition">🔍 Jobs</Link>
-              <Link to="/feeds" className="hover:bg-blue-700 px-3 py-2 rounded transition">📢 Community</Link>
-              <Link to="/messages" className="hover:bg-blue-700 px-3 py-2 rounded transition">💬 Messages</Link>
-              <Link to="/portfolio" className="hover:bg-blue-700 px-3 py-2 rounded transition">📋 Portfolio</Link>
-              {userRole === 'jobseeker' && (
-                <Link to="/dashboard/jobseeker" className="hover:bg-blue-700 px-3 py-2 rounded transition">👤 Dashboard</Link>
-              )}
+              <Link
+                to="/job-matches"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+              >
+                💼 Matches
+              </Link>
+              <Link
+                to="/jobs"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+              >
+                🔍 Jobs
+              </Link>
+              <Link
+                to="/feeds"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+              >
+                📢 Feed
+              </Link>
+              <Link
+                to="/messages"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+              >
+                💬 Messages
+              </Link>
+              <Link
+                to="/my-portfolio"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+              >
+                👤 Profile
+              </Link>
               {userRole === 'recruiter' && (
-                <>
-                  <Link to="/dashboard/recruiter" className="hover:bg-blue-700 px-3 py-2 rounded transition">👤 Dashboard</Link>
-                  <Link to="/post-job" className="hover:bg-blue-700 px-3 py-2 rounded transition">📝 Post Job</Link>
-                </>
+                <Link
+                  to="/post-job"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    transition: 'all 0.2s',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                  onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                >
+                  📝 Post Job
+                </Link>
               )}
-              <button 
-                onClick={handleLogout} 
-                className="hover:bg-red-600 px-3 py-2 rounded transition font-semibold"
+              <button
+                onClick={handleLogout}
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  background: 'transparent',
+                  border: 'none',
+                  fontWeight: '600',
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#dc2626'}
+                onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 Logout
               </button>
             </>
           )}
         </div>
-
-        {/* Mobile Menu Button */}
-        <button 
-          onClick={toggleMenu}
-          className="md:hidden text-white hover:text-gray-200 transition"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
       </div>
-
-      {/* Mobile Navigation */}
-      {menuOpen && (
-        <div className="md:hidden bg-blue-700 border-t border-blue-500">
-          <div className="px-4 py-3 space-y-2">
-            {!isAuthenticated ? (
-              <>
-                <Link to="/login" className="block hover:bg-blue-600 px-3 py-2 rounded transition">Login</Link>
-                <Link to="/signup/jobseeker" className="block hover:bg-blue-600 px-3 py-2 rounded transition">Job Seeker</Link>
-                <Link to="/signup/recruiter" className="block hover:bg-blue-600 px-3 py-2 rounded transition">Recruiter</Link>
-              </>
-            ) : (
-              <>
-                <Link to="/jobs" className="block hover:bg-blue-600 px-3 py-2 rounded transition">🔍 Jobs</Link>
-                <Link to="/feeds" className="block hover:bg-blue-600 px-3 py-2 rounded transition">📢 Community</Link>
-                <Link to="/messages" className="block hover:bg-blue-600 px-3 py-2 rounded transition">💬 Messages</Link>
-                <Link to="/portfolio" className="block hover:bg-blue-600 px-3 py-2 rounded transition">📋 Portfolio</Link>
-                {userRole === 'jobseeker' && (
-                  <Link to="/dashboard/jobseeker" className="block hover:bg-blue-600 px-3 py-2 rounded transition">👤 Dashboard</Link>
-                )}
-                {userRole === 'recruiter' && (
-                  <>
-                    <Link to="/dashboard/recruiter" className="block hover:bg-blue-600 px-3 py-2 rounded transition">👤 Dashboard</Link>
-                    <Link to="/post-job" className="block hover:bg-blue-600 px-3 py-2 rounded transition">📝 Post Job</Link>
-                  </>
-                )}
-                <button 
-                  onClick={handleLogout}
-                  className="w-full text-left hover:bg-red-600 px-3 py-2 rounded transition font-semibold"
-                >
-                  Logout
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      )}
     </nav>
   );
 }
