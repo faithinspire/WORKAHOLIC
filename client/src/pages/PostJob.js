@@ -56,27 +56,120 @@ export default function PostJob() {
     }
   };
 
+  const styles = {
+    container: {
+      minHeight: '100vh',
+      background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
+      padding: '2rem 1rem',
+    },
+    maxWidth: {
+      maxWidth: '800px',
+      margin: '0 auto',
+    },
+    card: {
+      background: 'white',
+      borderRadius: '0.5rem',
+      boxShadow: '0 20px 25px rgba(0,0,0,0.1)',
+      padding: '2rem',
+    },
+    title: {
+      fontSize: '2rem',
+      fontWeight: 'bold',
+      color: '#1e3a8a',
+      marginBottom: '0.5rem',
+    },
+    subtitle: {
+      fontSize: '0.875rem',
+      color: '#6b7280',
+      marginBottom: '1.5rem',
+    },
+    successBox: {
+      background: '#dcfce7',
+      borderLeft: '4px solid #16a34a',
+      color: '#15803d',
+      padding: '1rem',
+      borderRadius: '0.375rem',
+      marginBottom: '1rem',
+    },
+    errorBox: {
+      background: '#fee2e2',
+      borderLeft: '4px solid #dc2626',
+      color: '#991b1b',
+      padding: '1rem',
+      borderRadius: '0.375rem',
+      marginBottom: '1rem',
+    },
+    formGroup: {
+      marginBottom: '1.5rem',
+    },
+    label: {
+      display: 'block',
+      color: '#374151',
+      fontWeight: 'bold',
+      marginBottom: '0.5rem',
+      fontSize: '0.875rem',
+    },
+    input: {
+      width: '100%',
+      padding: '0.75rem',
+      border: '1px solid #d1d5db',
+      borderRadius: '0.375rem',
+      fontSize: '1rem',
+      fontFamily: 'inherit',
+      boxSizing: 'border-box',
+    },
+    textarea: {
+      width: '100%',
+      padding: '0.75rem',
+      border: '1px solid #d1d5db',
+      borderRadius: '0.375rem',
+      fontSize: '1rem',
+      fontFamily: 'inherit',
+      boxSizing: 'border-box',
+      minHeight: '150px',
+      resize: 'vertical',
+    },
+    grid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+      gap: '1.5rem',
+    },
+    submitButton: {
+      width: '100%',
+      background: 'linear-gradient(to right, #16a34a, #10b981)',
+      color: 'white',
+      fontWeight: 'bold',
+      padding: '0.75rem',
+      borderRadius: '0.375rem',
+      border: 'none',
+      fontSize: '1rem',
+      cursor: 'pointer',
+      marginTop: '1.5rem',
+      transition: 'opacity 0.2s',
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-xl p-6 sm:p-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-blue-900 mb-2">📝 Post a New Job</h1>
-          <p className="text-gray-600 mb-8 text-sm sm:text-base">Create an opportunity for talented teachers</p>
+    <div style={styles.container}>
+      <div style={styles.maxWidth}>
+        <div style={styles.card}>
+          <h1 style={styles.title}>📝 Post a New Job</h1>
+          <p style={styles.subtitle}>Create an opportunity for talented teachers</p>
 
           {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4 text-sm sm:text-base">
+            <div style={styles.successBox}>
               ✓ {success}
             </div>
           )}
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm sm:text-base">
+            <div style={styles.errorBox}>
               ✕ {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-gray-700 font-bold mb-2 text-sm sm:text-base">Job Title *</label>
+          <form onSubmit={handleSubmit}>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Job Title *</label>
               <input
                 type="text"
                 name="title"
@@ -84,32 +177,31 @@ export default function PostJob() {
                 onChange={handleChange}
                 required
                 placeholder="e.g., Mathematics Teacher"
-                className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base"
+                style={styles.input}
               />
             </div>
 
-            <div>
-              <label className="block text-gray-700 font-bold mb-2 text-sm sm:text-base">Description *</label>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Description *</label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 required
-                rows="5"
                 placeholder="Job description, requirements, and responsibilities..."
-                className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base resize-none"
+                style={styles.textarea}
               ></textarea>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 font-bold mb-2 text-sm sm:text-base">Education Level *</label>
+            <div style={styles.grid}>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Education Level *</label>
                 <select
                   name="educationLevel"
                   value={formData.educationLevel}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base"
+                  style={styles.input}
                 >
                   <option value="">Select Level</option>
                   <option value="Primary">Primary</option>
@@ -119,13 +211,13 @@ export default function PostJob() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-gray-700 font-bold mb-2 text-sm sm:text-base">Subject</label>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Subject</label>
                 <select
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base"
+                  style={styles.input}
                 >
                   <option value="">Select Subject</option>
                   {subjects.map(subj => (
@@ -135,15 +227,15 @@ export default function PostJob() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 font-bold mb-2 text-sm sm:text-base">State *</label>
+            <div style={styles.grid}>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>State *</label>
                 <select
                   name="locationState"
                   value={formData.locationState}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base"
+                  style={styles.input}
                 >
                   <option value="">Select State</option>
                   {Object.keys(statesAndLGAs).map(state => (
@@ -152,13 +244,13 @@ export default function PostJob() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-gray-700 font-bold mb-2 text-sm sm:text-base">LGA</label>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>LGA</label>
                 <select
                   name="locationLga"
                   value={formData.locationLga}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base"
+                  style={styles.input}
                 >
                   <option value="">Select LGA</option>
                   {lgas.map(lga => (
@@ -168,15 +260,15 @@ export default function PostJob() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 font-bold mb-2 text-sm sm:text-base">Employment Type *</label>
+            <div style={styles.grid}>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Employment Type *</label>
                 <select
                   name="employmentType"
                   value={formData.employmentType}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base"
+                  style={styles.input}
                 >
                   <option value="">Select Type</option>
                   <option value="Full-time">Full-time</option>
@@ -185,15 +277,15 @@ export default function PostJob() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-gray-700 font-bold mb-2 text-sm sm:text-base">Salary (Optional)</label>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Salary (Optional)</label>
                 <input
                   type="text"
                   name="salary"
                   value={formData.salary}
                   onChange={handleChange}
                   placeholder="e.g., ₦50,000 - ₦100,000"
-                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base"
+                  style={styles.input}
                 />
               </div>
             </div>
@@ -201,7 +293,11 @@ export default function PostJob() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold px-4 py-3 sm:py-4 rounded-lg hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm sm:text-base"
+              style={{
+                ...styles.submitButton,
+                opacity: loading ? 0.6 : 1,
+                cursor: loading ? 'not-allowed' : 'pointer',
+              }}
             >
               {loading ? '⏳ Posting Job...' : '✓ Post Job'}
             </button>
