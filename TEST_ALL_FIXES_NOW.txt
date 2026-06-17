@@ -259,8 +259,8 @@ TEST STEP 6: Check notifications
 
 TEST STEP 7: Verify payment config
 - Check `.env` for Paystack keys:
-  PAYSTACK_SECRET_KEY=sk_live_... ✅
-  PAYSTACK_PUBLIC_KEY=pk_live_... ✅
+  PAYSTACK_SECRET_KEY=sk_live_[YOUR_KEY] ✅
+  PAYSTACK_PUBLIC_KEY=pk_live_[YOUR_KEY] ✅
 
 ✅ EXPECTED: Recruiters can hire candidates, payment works for additional hires
 

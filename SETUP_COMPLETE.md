@@ -9,7 +9,7 @@ Your WORKAHOLIC teaching job platform is **fully functional and running**!
 - ✅ **All Routes Loaded**: Auth, Jobs, JobSeekers, Recruiters, Uploads
 - ✅ **Database**: Configured with Supabase credentials
 - ✅ **Authentication**: JWT implemented with fallback storage
-- ✅ **Payment Gateway**: Paystack integrated (sk_live_...)
+- ✅ **Payment Gateway**: Paystack integrated (keys secured)
 - ⚠️ **Database Connection**: Configured but needs internet access to sync
 
 ### Frontend Status
@@ -89,8 +89,8 @@ Password: Workaholic@2026 (URL encoded as Workaholic%4020262)
 
 ### Paystack Configuration
 ```
-Secret Key: sk_live_a8724725f7d1891a31b09bd1f3e5cfcee27a8265
-Public Key: pk_live_b2499e1bf2df58c4654381fbf998e5d739512afe
+Secret Key: sk_live_[YOUR_SECRET_KEY]
+Public Key: pk_live_[YOUR_PUBLIC_KEY]
 ```
 
 ### Payment Flow

@@ -108,150 +108,387 @@ export default function Feeds() {
     return postDate.toLocaleDateString();
   };
 
+  const styles = {
+    container: {
+      minHeight: '100vh',
+      background: 'linear-gradient(to bottom right, #f0f9ff, #e0e7ff)',
+      paddingTop: '2rem',
+      paddingBottom: '2rem',
+    },
+    wrapper: {
+      maxWidth: '800px',
+      margin: '0 auto',
+      padding: '0 1rem',
+    },
+    spaceY: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1.5rem',
+    },
+    createPostCard: {
+      background: 'white',
+      borderRadius: '0.5rem',
+      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+      padding: '1.5rem',
+    },
+    cardTitle: {
+      fontSize: '1.25rem',
+      fontWeight: 'bold',
+      color: '#111827',
+      marginBottom: '1rem',
+    },
+    textarea: {
+      width: '100%',
+      padding: '0.75rem',
+      border: '1px solid #d1d5db',
+      borderRadius: '0.375rem',
+      fontSize: '1rem',
+      fontFamily: 'inherit',
+      minHeight: '100px',
+      resize: 'vertical',
+      boxSizing: 'border-box',
+      marginBottom: '1rem',
+    },
+    submitButton: {
+      width: '100%',
+      background: '#2563eb',
+      color: 'white',
+      padding: '0.5rem 1.5rem',
+      borderRadius: '0.375rem',
+      border: 'none',
+      fontSize: '1rem',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      transition: 'background 0.2s',
+    },
+    errorBox: {
+      background: '#fecaca',
+      border: '1px solid #f87171',
+      color: '#991b1b',
+      padding: '1rem',
+      borderRadius: '0.375rem',
+    },
+    loadingContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: '3rem',
+      paddingBottom: '3rem',
+    },
+    spinner: {
+      width: '3rem',
+      height: '3rem',
+      border: '4px solid #dbeafe',
+      borderTop: '4px solid #2563eb',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite',
+      marginBottom: '1rem',
+    },
+    postCard: {
+      background: 'white',
+      borderRadius: '0.5rem',
+      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+      overflow: 'hidden',
+    },
+    postHeader: {
+      padding: '1.5rem',
+      borderBottom: '1px solid #e5e7eb',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1rem',
+    },
+    avatar: {
+      width: '3rem',
+      height: '3rem',
+      borderRadius: '50%',
+      background: '#2563eb',
+      color: 'white',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold',
+    },
+    postInfo: {
+      flex: 1,
+    },
+    userName: {
+      fontWeight: 'bold',
+      color: '#111827',
+    },
+    postTime: {
+      fontSize: '0.75rem',
+      color: '#9ca3af',
+    },
+    postContent: {
+      padding: '1.5rem',
+    },
+    postText: {
+      color: '#1f2937',
+      lineHeight: '1.5',
+    },
+    postStats: {
+      padding: '0.75rem 1.5rem',
+      borderTop: '1px solid #e5e7eb',
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontSize: '0.875rem',
+      color: '#6b7280',
+    },
+    postActions: {
+      padding: '0.75rem 1.5rem',
+      borderTop: '1px solid #e5e7eb',
+      display: 'flex',
+      gap: '1rem',
+    },
+    actionButton: {
+      flex: 1,
+      padding: '0.5rem',
+      borderRadius: '0.375rem',
+      border: 'none',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '0.5rem',
+    },
+    commentsSection: {
+      padding: '1.5rem',
+      background: '#f9fafb',
+      borderTop: '1px solid #e5e7eb',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1rem',
+    },
+    commentBox: {
+      background: 'white',
+      padding: '0.75rem',
+      borderRadius: '0.375rem',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.5rem',
+    },
+    commentHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      marginBottom: '0.5rem',
+    },
+    smallAvatar: {
+      width: '2rem',
+      height: '2rem',
+      borderRadius: '50%',
+      background: '#4f46e5',
+      color: 'white',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '0.75rem',
+      fontWeight: 'bold',
+    },
+    commentUserName: {
+      fontWeight: 'bold',
+      fontSize: '0.875rem',
+      color: '#111827',
+    },
+    commentTime: {
+      fontSize: '0.75rem',
+      color: '#9ca3af',
+    },
+    commentText: {
+      fontSize: '0.875rem',
+      color: '#1f2937',
+    },
+    addCommentForm: {
+      display: 'flex',
+      gap: '0.5rem',
+    },
+    commentInput: {
+      flex: 1,
+      padding: '0.5rem 0.75rem',
+      border: '1px solid #d1d5db',
+      borderRadius: '0.375rem',
+      fontSize: '0.875rem',
+    },
+    emptyState: {
+      background: 'white',
+      borderRadius: '0.5rem',
+      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+      padding: '3rem',
+      textAlign: 'center',
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
-      <div className="max-w-2xl mx-auto px-4 space-y-6">
-        {/* Create Post Section */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Share Your Thoughts</h2>
-          <form onSubmit={handleCreatePost} className="space-y-4">
-            <textarea
-              value={newPost}
-              onChange={(e) => setNewPost(e.target.value)}
-              placeholder="What's on your mind? Share your teaching experience, tips, or ask questions..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 resize-none"
-              rows="4"
-            />
-            <button
-              type="submit"
-              disabled={!newPost.trim()}
-              className="w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold"
-            >
-              Post
-            </button>
-          </form>
-        </div>
-
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
-            {error}
+    <div style={styles.container}>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+      
+      <div style={styles.wrapper}>
+        <div style={styles.spaceY}>
+          {/* Create Post Section */}
+          <div style={styles.createPostCard}>
+            <h2 style={styles.cardTitle}>Share Your Thoughts</h2>
+            <form onSubmit={handleCreatePost}>
+              <textarea
+                value={newPost}
+                onChange={(e) => setNewPost(e.target.value)}
+                placeholder="What's on your mind? Share your teaching experience, tips, or ask questions..."
+                style={styles.textarea}
+              />
+              <button
+                type="submit"
+                disabled={!newPost.trim()}
+                onMouseEnter={(e) => !newPost.trim() ? null : (e.target.style.background = '#1d4ed8')}
+                onMouseLeave={(e) => !newPost.trim() ? null : (e.target.style.background = '#2563eb')}
+                style={{
+                  ...styles.submitButton,
+                  opacity: !newPost.trim() ? 0.5 : 1,
+                  cursor: !newPost.trim() ? 'not-allowed' : 'pointer',
+                }}
+              >
+                Post
+              </button>
+            </form>
           </div>
-        )}
 
-        {/* Posts Feed */}
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-600 mb-4 mx-auto"></div>
-              <p className="text-gray-600">Loading feed...</p>
+          {/* Error Message */}
+          {error && <div style={styles.errorBox}>{error}</div>}
+
+          {/* Posts Feed */}
+          {loading ? (
+            <div style={styles.loadingContainer}>
+              <div style={styles.spinner}></div>
+              <p style={{color: '#6b7280'}}>Loading feed...</p>
             </div>
-          </div>
-        ) : posts.length > 0 ? (
-          <div className="space-y-4">
-            {posts.map((post) => (
-              <div key={post.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Post Header */}
-                <div className="px-6 py-4 border-b border-gray-200 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
-                    {post.user_name?.[0]?.toUpperCase() || '?'}
+          ) : posts.length > 0 ? (
+            <div style={styles.spaceY}>
+              {posts.map((post) => (
+                <div key={post.id} style={styles.postCard}>
+                  {/* Post Header */}
+                  <div style={styles.postHeader}>
+                    <div style={styles.avatar}>
+                      {post.user_name?.[0]?.toUpperCase() || '?'}
+                    </div>
+                    <div style={styles.postInfo}>
+                      <div style={styles.userName}>{post.user_name || 'Anonymous User'}</div>
+                      <div style={styles.postTime}>{formatDate(post.created_at)}</div>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-gray-900">{post.user_name || 'Anonymous User'}</h3>
-                    <p className="text-xs text-gray-500">{formatDate(post.created_at)}</p>
+
+                  {/* Post Content */}
+                  <div style={styles.postContent}>
+                    <p style={styles.postText}>{post.content || post.title}</p>
                   </div>
-                </div>
 
-                {/* Post Content */}
-                <div className="px-6 py-4">
-                  <p className="text-gray-800 leading-relaxed">{post.content || post.title}</p>
-                </div>
+                  {/* Post Stats */}
+                  <div style={styles.postStats}>
+                    <span>❤️ {post.likes_count || 0} likes</span>
+                    <span>💬 {post.comments_count || 0} comments</span>
+                  </div>
 
-                {/* Post Stats */}
-                <div className="px-6 py-3 border-t border-gray-200 flex items-center justify-between text-sm text-gray-600">
-                  <span>❤️ {post.likes_count || 0} likes</span>
-                  <span>💬 {post.comments_count || 0} comments</span>
-                </div>
-
-                {/* Post Actions */}
-                <div className="px-6 py-3 border-t border-gray-200 flex gap-4">
-                  <button
-                    onClick={() => handleLikePost(post.id)}
-                    className={`flex-1 py-2 rounded-lg transition font-semibold flex items-center justify-center gap-2 ${
-                      likedPosts.has(post.id)
-                        ? 'bg-red-100 text-red-600 hover:bg-red-200'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
-                  >
-                    ❤️ Like
-                  </button>
-                  <button
-                    onClick={() => toggleComments(post.id)}
-                    className="flex-1 bg-gray-100 text-gray-600 hover:bg-gray-200 py-2 rounded-lg transition font-semibold flex items-center justify-center gap-2"
-                  >
-                    💬 Comment
-                  </button>
-                </div>
-
-                {/* Comments Section */}
-                {expandedComments.has(post.id) && (
-                  <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 space-y-4">
-                    {/* Existing Comments */}
-                    {post.comments && post.comments.length > 0 ? (
-                      <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
-                        {post.comments.map((comment, idx) => (
-                          <div key={idx} className="bg-white p-3 rounded-lg">
-                            <div className="flex items-center gap-2 mb-2">
-                              <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">
-                                {comment.user_name?.[0]?.toUpperCase() || '?'}
-                              </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-sm text-gray-900">{comment.user_name}</p>
-                                <p className="text-xs text-gray-500">{formatDate(comment.created_at)}</p>
-                              </div>
-                            </div>
-                            <p className="text-gray-700 text-sm">{comment.content}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-gray-600 text-sm text-center py-2">No comments yet</p>
-                    )}
-
-                    {/* Add Comment */}
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleAddComment(post.id);
+                  {/* Post Actions */}
+                  <div style={styles.postActions}>
+                    <button
+                      onClick={() => handleLikePost(post.id)}
+                      style={{
+                        ...styles.actionButton,
+                        background: likedPosts.has(post.id) ? '#fee2e2' : '#f3f4f6',
+                        color: likedPosts.has(post.id) ? '#dc2626' : '#4b5563',
                       }}
-                      className="flex gap-2"
+                      onMouseEnter={(e) => e.target.style.background = likedPosts.has(post.id) ? '#fecaca' : '#e5e7eb'}
+                      onMouseLeave={(e) => e.target.style.background = likedPosts.has(post.id) ? '#fee2e2' : '#f3f4f6'}
                     >
-                      <input
-                        type="text"
-                        value={newComments[post.id] || ''}
-                        onChange={(e) => setNewComments({ ...newComments, [post.id]: e.target.value })}
-                        placeholder="Add a comment..."
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 text-sm"
-                      />
-                      <button
-                        type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold"
-                      >
-                        Reply
-                      </button>
-                    </form>
+                      ❤️ Like
+                    </button>
+                    <button
+                      onClick={() => toggleComments(post.id)}
+                      style={{
+                        ...styles.actionButton,
+                        background: '#f3f4f6',
+                        color: '#4b5563',
+                      }}
+                      onMouseEnter={(e) => e.target.style.background = '#e5e7eb'}
+                      onMouseLeave={(e) => e.target.style.background = '#f3f4f6'}
+                    >
+                      💬 Comment
+                    </button>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-            <p className="text-3xl mb-4">📢</p>
-            <p className="text-xl text-gray-600 mb-2">No posts yet</p>
-            <p className="text-gray-500">Be the first to share your thoughts with the community!</p>
-          </div>
-        )}
+
+                  {/* Comments Section */}
+                  {expandedComments.has(post.id) && (
+                    <div style={styles.commentsSection}>
+                      {/* Existing Comments */}
+                      {post.comments && post.comments.length > 0 ? (
+                        <div style={{...styles.spaceY, maxHeight: '12rem', overflowY: 'auto'}}>
+                          {post.comments.map((comment, idx) => (
+                            <div key={idx} style={styles.commentBox}>
+                              <div style={styles.commentHeader}>
+                                <div style={styles.smallAvatar}>
+                                  {comment.user_name?.[0]?.toUpperCase() || '?'}
+                                </div>
+                                <div>
+                                  <div style={styles.commentUserName}>{comment.user_name}</div>
+                                  <div style={styles.commentTime}>{formatDate(comment.created_at)}</div>
+                                </div>
+                              </div>
+                              <p style={styles.commentText}>{comment.content}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p style={{color: '#6b7280', textAlign: 'center', paddingTop: '1rem', paddingBottom: '1rem'}}>No comments yet</p>
+                      )}
+
+                      {/* Add Comment */}
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleAddComment(post.id);
+                        }}
+                        style={styles.addCommentForm}
+                      >
+                        <input
+                          type="text"
+                          value={newComments[post.id] || ''}
+                          onChange={(e) => setNewComments({ ...newComments, [post.id]: e.target.value })}
+                          placeholder="Add a comment..."
+                          style={styles.commentInput}
+                        />
+                        <button
+                          type="submit"
+                          style={{
+                            ...styles.actionButton,
+                            background: '#2563eb',
+                            color: 'white',
+                            flex: '0 0 auto',
+                            width: 'auto',
+                            padding: '0.5rem 1rem',
+                          }}
+                          onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                          onMouseLeave={(e) => e.target.style.background = '#2563eb'}
+                        >
+                          Reply
+                        </button>
+                      </form>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={styles.emptyState}>
+              <p style={{fontSize: '2rem', marginBottom: '1rem'}}>📢</p>
+              <p style={{fontSize: '1.25rem', color: '#6b7280', marginBottom: '0.5rem'}}>No posts yet</p>
+              <p style={{color: '#9ca3af'}}>Be the first to share your thoughts with the community!</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -93,8 +93,8 @@
 
 **Environment** (`.env`):
 ```
-PAYSTACK_SECRET_KEY=sk_live_a8724725f7d1891a31b09bd1f3e5cfcee27a8265
-PAYSTACK_PUBLIC_KEY=pk_live_b2499e1bf2df58c4654381fbf998e5d739512afe
+PAYSTACK_SECRET_KEY=sk_live_[YOUR_SECRET_KEY]
+PAYSTACK_PUBLIC_KEY=pk_live_[YOUR_PUBLIC_KEY]
 ```
 
 **Workflow**:

@@ -110,8 +110,8 @@ DATABASE ✓
 
 PAYMENT ✓
   ✓ Paystack account created
-  ✓ Live secret key: sk_live_a8724725f7d1891a31b09bd1f3e5cfcee27a8265
-  ✓ Live public key: pk_live_b2499e1bf2df58c4654381fbf998e5d739512afe
+  ✓ Live secret key: sk_live_[YOUR_KEY]
+  ✓ Live public key: pk_live_[YOUR_KEY]
   ✓ Payment modal ready
   ✓ Free first hire implemented
   ✓ ₦5,000/month subscription ready
@@ -204,8 +204,8 @@ DATABASE URL (Updated)
   postgresql://postgres:Workaholic%4020262@db.zzpxjmmtlophkllboncl.supabase.co:5432/postgres
 
 PAYSTACK KEYS (Live - ACTIVE)
-  Secret: sk_live_a8724725f7d1891a31b09bd1f3e5cfcee27a8265
-  Public: pk_live_b2499e1bf2df58c4654381fbf998e5d739512afe
+  Secret: sk_live_[YOUR_SECRET_KEY]
+  Public: pk_live_[YOUR_PUBLIC_KEY]
 
 SERVER SETTINGS
   Port: 5000 (auto-fallback to 5001, 5002 if in use)
