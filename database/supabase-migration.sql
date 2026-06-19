@@ -1,4 +1,4 @@
--- FaithJobs Supabase Migration
+-- FaithJobs Supabase Migration - FIXED UUID Schema
 -- Compatible with Supabase PostgreSQL
 
 -- Enable UUID extension
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS feed_comments (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Saved Jobs table
+-- Saved Jobs table (FIXED - All UUIDs now)
 CREATE TABLE IF NOT EXISTS saved_jobs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -179,38 +179,7 @@ CREATE INDEX IF NOT EXISTS idx_feed_likes_feed_id ON feed_likes(feed_id);
 CREATE INDEX IF NOT EXISTS idx_feed_likes_user_id ON feed_likes(user_id);
 CREATE INDEX IF NOT EXISTS idx_feed_comments_feed_id ON feed_comments(feed_id);
 CREATE INDEX IF NOT EXISTS idx_saved_jobs_user_id ON saved_jobs(user_id);
+CREATE INDEX IF NOT EXISTS idx_saved_jobs_job_id ON saved_jobs(job_id);
 CREATE INDEX IF NOT EXISTS idx_documents_user_id ON documents(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(read);
-
--- Enable RLS (Row Level Security) - Optional but recommended
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE jobseekers ENABLE ROW LEVEL SECURITY;
-ALTER TABLE recruiters ENABLE ROW LEVEL SECURITY;
-ALTER TABLE jobs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE applications ENABLE ROW LEVEL SECURITY;
-ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
-ALTER TABLE feeds ENABLE ROW LEVEL SECURITY;
-ALTER TABLE saved_jobs ENABLE ROW LEVEL SECURITY;
-
--- Create basic RLS policies
-CREATE POLICY "Profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
-CREATE POLICY "Users can update their own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
-
--- Insert sample states data
-INSERT INTO profiles (email, password_hash, fullname, role, state) VALUES
-('admin@faithjobs.com', 'hashed_password', 'Admin User', 'admin', 'Lagos')
-ON CONFLICT (email) DO NOTHING;
-
--- Sample jobs for testing
-INSERT INTO jobs (recruiter_id, title, description, education_level, location, employment_type, status) VALUES
-(
-    (SELECT id FROM recruiters LIMIT 1),
-    'Senior Mathematics Teacher',
-    'Looking for experienced mathematics teacher for secondary school',
-    'Secondary',
-    'Lagos',
-    'Full-time',
-    'active'
-)
-ON CONFLICT (id) DO NOTHING;
