@@ -63,9 +63,9 @@ router.post('/signup', async (req, res) => {
     // Store all professional fields for job seekers
     if (role === 'jobseeker') {
       const { 
-        professional_title, years_experience, education_level, field_of_study,
-        desired_job_title, job_category, employment_type, desired_salary,
-        availability, state, certifications, skills, bio: userBio, preferred_locations
+        professional_title, years_experience, education_level, field_of_study, educationLevel,
+        desired_job_title, job_category, subject, employment_type, employmentType, desired_salary,
+        availability, state, certifications, skills, bio: userBio, preferred_locations, lga
       } = req.body;
       
       const jobseekerProfile = {
@@ -73,20 +73,24 @@ router.post('/signup', async (req, res) => {
         fullname: userFullname,
         email,
         phone,
-        state,
+        state: state || '',
+        lga: lga || '',
         professional_title: professional_title || '',
-        years_experience: years_experience || '',
-        education_level: education_level || '',
+        years_experience: parseInt(years_experience) || 0,
+        education_level: education_level || educationLevel || '',
         field_of_study: field_of_study || '',
         desired_job_title: desired_job_title || '',
-        job_category: job_category || 'teaching',
-        employment_type: employment_type || '',
+        job_category: job_category || subject || 'teaching',
+        employment_type: employment_type || employmentType || '',
         desired_salary: desired_salary || '',
         availability: availability || 'immediate',
         certifications: certifications || '',
         skills: skills || '',
         bio: userBio || '',
         preferred_locations: preferred_locations || [],
+        profile_image_url: null,
+        star_rating: 1,
+        total_followers: 0,
         created_at: new Date().toISOString()
       };
       
@@ -95,6 +99,7 @@ router.post('/signup', async (req, res) => {
       // Store in localStorage for persistence
       try {
         localStorage.setItem(`jobseeker_${userId}`, JSON.stringify(jobseekerProfile));
+        localStorage.setItem(`profile_${userId}`, JSON.stringify(jobseekerProfile));
       } catch (e) {
         console.warn('Could not save to localStorage');
       }
@@ -170,6 +175,7 @@ router.post('/signup', async (req, res) => {
     res.status(201).json({
       message: `${role === 'jobseeker' ? 'Job Seeker' : 'Recruiter'} registered successfully`,
       token,
+      userId,
       user: responseUser,
     });
   } catch (error) {
@@ -179,6 +185,94 @@ router.post('/signup', async (req, res) => {
 });
 
 // Recruiter Signup - Specific endpoint
+router.post('/signup/jobseeker', async (req, res) => {
+  try {
+    const { email, password, fullname, phone, role = 'jobseeker' } = req.body;
+    
+    if (!email || !password || !fullname) {
+      return res.status(400).json({ message: 'Missing required fields: email, password, fullname' });
+    }
+
+    // Check if user already exists
+    if (inMemoryUsers[email]) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Create user
+    const userId = `user_${Math.floor(Math.random() * 1000000)}`;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    inMemoryUsers[email] = {
+      id: userId,
+      email,
+      password: hashedPassword,
+      fullname,
+      phone: phone || '',
+      role: 'jobseeker',
+      created_at: new Date().toISOString(),
+    };
+
+    // Create initial jobseeker profile
+    const jobseekerProfile = {
+      user_id: userId,
+      fullname,
+      email,
+      phone: phone || '',
+      state: '',
+      lga: '',
+      professional_title: '',
+      years_experience: 0,
+      education_level: '',
+      field_of_study: '',
+      desired_job_title: '',
+      job_category: 'teaching',
+      employment_type: '',
+      desired_salary: '',
+      availability: 'immediate',
+      certifications: '',
+      skills: '',
+      bio: '',
+      preferred_locations: [],
+      profile_image_url: null,
+      star_rating: 1,
+      total_followers: 0,
+      created_at: new Date().toISOString()
+    };
+
+    inMemoryJobseekers[userId] = jobseekerProfile;
+
+    // Store in localStorage
+    try {
+      localStorage.setItem(`jobseeker_${userId}`, JSON.stringify(jobseekerProfile));
+      localStorage.setItem(`profile_${userId}`, JSON.stringify(jobseekerProfile));
+    } catch (e) {
+      console.warn('Could not save to localStorage');
+    }
+
+    const token = generateToken(userId, 'jobseeker', email);
+
+    res.status(201).json({
+      message: 'Job Seeker registered successfully',
+      token,
+      userId,
+      user: {
+        id: userId,
+        email,
+        fullname,
+        phone,
+        role: 'jobseeker',
+        ...req.body
+      },
+    });
+  } catch (error) {
+    console.error('Job seeker signup error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Recruiter Signup - Specific endpoint
+
 router.post('/recruiter/signup', async (req, res) => {
   try {
     const { email, password, fullname, company_name, phone, institution_type, state } = req.body;

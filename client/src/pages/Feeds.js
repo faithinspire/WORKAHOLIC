@@ -110,7 +110,7 @@ export default function Feeds() {
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(to bottom right, #f0f9ff, #e0e7ff)',
+      background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff8c42 100%)',
       paddingTop: '2rem',
       paddingBottom: 'calc(2rem + max(6rem, env(safe-area-inset-bottom)))',
     },
@@ -207,6 +207,10 @@ export default function Feeds() {
       alignItems: 'center',
       justifyContent: 'center',
       fontWeight: 'bold',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      fontSize: '1rem',
+      overflow: 'hidden',
     },
     postInfo: {
       flex: 1,
@@ -286,6 +290,9 @@ export default function Feeds() {
       justifyContent: 'center',
       fontSize: '0.75rem',
       fontWeight: 'bold',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      overflow: 'hidden',
     },
     commentUserName: {
       fontWeight: 'bold',
@@ -371,8 +378,12 @@ export default function Feeds() {
                 <div key={post.id} style={styles.postCard}>
                   {/* Post Header */}
                   <div style={styles.postHeader}>
-                    <div style={styles.avatar}>
-                      {post.user_name?.[0]?.toUpperCase() || '?'}
+                    <div style={{
+                      ...styles.avatar,
+                      backgroundImage: post.profile_image_url ? `url(${post.profile_image_url})` : 'none',
+                      background: post.profile_image_url ? undefined : '#2563eb',
+                    }}>
+                      {!post.profile_image_url && (post.user_name?.[0]?.toUpperCase() || '?')}
                     </div>
                     <div style={styles.postInfo}>
                       <div style={styles.userName}>{post.user_name || 'Anonymous User'}</div>
@@ -426,10 +437,14 @@ export default function Feeds() {
                       {post.comments && post.comments.length > 0 ? (
                         <div style={{...styles.spaceY, maxHeight: '12rem', overflowY: 'auto'}}>
                           {post.comments.map((comment, idx) => (
-                            <div key={idx} style={styles.commentBox}>
+                            <div style={styles.commentBox}>
                               <div style={styles.commentHeader}>
-                                <div style={styles.smallAvatar}>
-                                  {comment.user_name?.[0]?.toUpperCase() || '?'}
+                                <div style={{
+                                  ...styles.smallAvatar,
+                                  backgroundImage: comment.profile_image_url ? `url(${comment.profile_image_url})` : 'none',
+                                  background: comment.profile_image_url ? undefined : '#4f46e5',
+                                }}>
+                                  {!comment.profile_image_url && (comment.user_name?.[0]?.toUpperCase() || '?')}
                                 </div>
                                 <div>
                                   <div style={styles.commentUserName}>{comment.user_name}</div>

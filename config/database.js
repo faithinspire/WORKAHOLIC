@@ -37,8 +37,8 @@ if (DATABASE_URL) {
 // Test direct PostgreSQL connection
 async function testDatabaseConnection() {
   if (!pgPool) {
-    console.warn('⚠️  No database pool available, will use REST API');
-    useRESTAPI = true;
+    console.warn('⚠️  No database pool available, using in-memory storage');
+    useRESTAPI = false;
     return false;
   }
 
@@ -49,10 +49,9 @@ async function testDatabaseConnection() {
     useRESTAPI = false;
     return true;
   } catch (error) {
-    console.warn('⚠️  Direct PostgreSQL connection failed:', error.message);
-    console.log('   Switching to Supabase REST API...');
+    console.warn('⚠️  Direct PostgreSQL unavailable - using in-memory storage');
     dbConnected = false;
-    useRESTAPI = true;
+    useRESTAPI = false;
     return false;
   }
 }

@@ -4,8 +4,16 @@ const bodyParser = require('body-parser');
 const path = require('path');
 require('dotenv').config();
 
-// Initialize Supabase
-const supabaseServer = require('./utils/supabaseServer');
+// Initialize Supabase (suppress errors - use in-memory storage as fallback)
+let supabaseServer;
+try {
+  supabaseServer = require('./utils/supabaseServer');
+} catch (err) {
+  console.warn('⚠️  Supabase module error:', err.message);
+  supabaseServer = {
+    getConnectionStatus: () => ({ connected: false, error: 'Supabase unavailable' })
+  };
+}
 
 const app = express();
 

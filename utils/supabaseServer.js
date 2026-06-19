@@ -57,7 +57,8 @@ async function testConnection() {
     connectionStatus.connected = false;
     connectionStatus.error = err.message;
     connectionStatus.lastChecked = new Date();
-    console.error('❌ Supabase connection failed:', err.message);
+    console.warn('⚠️  Supabase connection unavailable - using in-memory storage:', err.message);
+    // Don't throw - allow app to continue with in-memory storage
     return false;
   }
 }
@@ -67,6 +68,9 @@ async function testConnection() {
  */
 async function getAllUsers(limit = 100, offset = 0) {
   try {
+    if (!connectionStatus.connected) {
+      return { users: [], count: 0, success: false, error: 'Supabase not connected', fromFallback: true };
+    }
     const { data, error, count } = await supabase
       .from('profiles')
       .select('*', { count: 'exact' })
@@ -76,8 +80,8 @@ async function getAllUsers(limit = 100, offset = 0) {
     if (error) throw error;
     return { users: data || [], count, success: true };
   } catch (err) {
-    console.error('Error fetching users:', err.message);
-    return { users: [], count: 0, success: false, error: err.message };
+    console.warn('⚠️  Error fetching users (using fallback):', err.message);
+    return { users: [], count: 0, success: false, error: err.message, fromFallback: true };
   }
 }
 
@@ -86,6 +90,9 @@ async function getAllUsers(limit = 100, offset = 0) {
  */
 async function getUserById(userId) {
   try {
+    if (!connectionStatus.connected) {
+      return { user: null, success: false, error: 'Supabase not connected', fromFallback: true };
+    }
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -95,8 +102,8 @@ async function getUserById(userId) {
     if (error) throw error;
     return { user: data, success: true };
   } catch (err) {
-    console.error('Error fetching user:', err.message);
-    return { user: null, success: false, error: err.message };
+    console.warn('⚠️  Error fetching user (using fallback):', err.message);
+    return { user: null, success: false, error: err.message, fromFallback: true };
   }
 }
 
@@ -125,6 +132,9 @@ async function upsertUserProfile(userId, profileData) {
  */
 async function getAllJobs(limit = 50, offset = 0, filters = {}) {
   try {
+    if (!connectionStatus.connected) {
+      return { jobs: [], count: 0, success: false, error: 'Supabase not connected', fromFallback: true };
+    }
     let query = supabase
       .from('jobs')
       .select('*', { count: 'exact' })
@@ -141,8 +151,8 @@ async function getAllJobs(limit = 50, offset = 0, filters = {}) {
     if (error) throw error;
     return { jobs: data || [], count, success: true };
   } catch (err) {
-    console.error('Error fetching jobs:', err.message);
-    return { jobs: [], count: 0, success: false, error: err.message };
+    console.warn('⚠️  Error fetching jobs (using fallback):', err.message);
+    return { jobs: [], count: 0, success: false, error: err.message, fromFallback: true };
   }
 }
 
@@ -315,6 +325,9 @@ async function sendMessage(messageData) {
  */
 async function getFeeds(limit = 50, offset = 0) {
   try {
+    if (!connectionStatus.connected) {
+      return { feeds: [], count: 0, success: false, error: 'Supabase not connected', fromFallback: true };
+    }
     const { data, error, count } = await supabase
       .from('feeds')
       .select('*', { count: 'exact' })
@@ -324,8 +337,8 @@ async function getFeeds(limit = 50, offset = 0) {
     if (error) throw error;
     return { feeds: data || [], count, success: true };
   } catch (err) {
-    console.error('Error fetching feeds:', err.message);
-    return { feeds: [], count: 0, success: false, error: err.message };
+    console.warn('⚠️  Error fetching feeds (using fallback):', err.message);
+    return { feeds: [], count: 0, success: false, error: err.message, fromFallback: true };
   }
 }
 

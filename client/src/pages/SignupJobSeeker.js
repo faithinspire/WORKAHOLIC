@@ -61,13 +61,21 @@ export default function SignupJobSeeker() {
     setLoading(true);
 
     try {
-      // Step 1: Create user account
+      // Step 1: Create user account with all profile data
       const signupResponse = await axios.post('http://localhost:5000/api/auth/signup/jobseeker', {
         email: formData.email,
         password: formData.password,
         fullname: formData.fullname,
         phone: formData.phone,
-        role: 'jobseeker'
+        role: 'jobseeker',
+        // Include all profile fields in signup
+        state: formData.state,
+        lga: formData.lga,
+        educationLevel: formData.educationLevel,
+        subject: formData.subject,
+        employmentType: formData.employmentType,
+        yearsExperience: formData.yearsExperience,
+        bio: formData.bio,
       });
 
       const userId = signupResponse.data.userId;
@@ -78,25 +86,11 @@ export default function SignupJobSeeker() {
       localStorage.setItem('userRole', 'jobseeker');
       localStorage.setItem('userName', formData.fullname);
 
-      // Step 2: Auto-create portfolio from signup data
-      const portfolioData = {
-        user_id: userId,
-        user_name: formData.fullname,
-        phone: formData.phone,
-        state: formData.state,
-        lga: formData.lga,
-        job_category: formData.subject || 'teaching',
-        bio: formData.bio,
-      };
-
-      await axios.post('http://localhost:5000/api/profiles/create', portfolioData, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
       // Redirect to dashboard
       navigate('/dashboard/jobseeker');
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed');
+      console.error('Signup error:', err);
     } finally {
       setLoading(false);
     }

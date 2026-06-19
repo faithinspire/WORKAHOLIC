@@ -62,7 +62,7 @@ export default function MyPortfolio() {
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(to bottom right, #f0f9ff, #e0e7ff)',
+      background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff8c42 100%)',
       padding: '2rem 1rem',
       paddingBottom: 'calc(2rem + max(6rem, env(safe-area-inset-bottom)))',
     },
@@ -93,6 +93,24 @@ export default function MyPortfolio() {
       marginBottom: '2rem',
       borderBottom: '1px solid #e5e7eb',
       paddingBottom: '1rem',
+      gap: '1rem',
+    },
+    profileAvatar: {
+      width: '6rem',
+      height: '6rem',
+      borderRadius: '50%',
+      background: '#2563eb',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      marginRight: '1rem',
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'white',
+      fontSize: '2rem',
+      fontWeight: 'bold',
+      flexShrink: 0,
     },
     profileInfo: {
       flex: 1,
@@ -246,21 +264,30 @@ export default function MyPortfolio() {
         {/* Profile Card */}
         <div style={styles.profileCard}>
           <div style={styles.profileHeader}>
-            <div style={styles.profileInfo}>
-              <h2 style={styles.profileName}>{portfolio?.user_name || 'Your Name'}</h2>
-              <p style={styles.profileRole}>{portfolio?.job_category || 'Professional'}</p>
-              <div style={styles.profileStats}>
-                <div style={styles.statItem}>
-                  <div style={styles.statNumber}>{portfolio?.total_followers || 0}</div>
-                  <div style={styles.statLabel}>Followers</div>
-                </div>
-                <div style={styles.statItem}>
-                  <div style={styles.statNumber}>{portfolio?.star_rating || 0}</div>
-                  <div style={styles.statLabel}>Rating</div>
-                </div>
-                <div style={styles.statItem}>
-                  <div style={styles.statNumber}>{portfolio?.years_experience || 0}</div>
-                  <div style={styles.statLabel}>Years Exp.</div>
+            <div style={{display: 'flex', alignItems: 'start', gap: '1rem', flex: 1}}>
+              <div style={{
+                ...styles.profileAvatar,
+                backgroundImage: portfolio?.profile_image_url ? `url(${portfolio.profile_image_url})` : 'none',
+                background: portfolio?.profile_image_url ? undefined : '#2563eb',
+              }}>
+                {!portfolio?.profile_image_url && (portfolio?.user_name?.[0]?.toUpperCase() || '?')}
+              </div>
+              <div style={styles.profileInfo}>
+                <h2 style={styles.profileName}>{portfolio?.user_name || 'Your Name'}</h2>
+                <p style={styles.profileRole}>{portfolio?.job_category || 'Professional'}</p>
+                <div style={styles.profileStats}>
+                  <div style={styles.statItem}>
+                    <div style={styles.statNumber}>{portfolio?.total_followers || 0}</div>
+                    <div style={styles.statLabel}>Followers</div>
+                  </div>
+                  <div style={styles.statItem}>
+                    <div style={styles.statNumber}>{portfolio?.star_rating || 0}</div>
+                    <div style={styles.statLabel}>Rating</div>
+                  </div>
+                  <div style={styles.statItem}>
+                    <div style={styles.statNumber}>{portfolio?.years_experience || 0}</div>
+                    <div style={styles.statLabel}>Years Exp.</div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,339 +1,228 @@
 const express = require('express');
 const router = express.Router();
-const dataPersistence = require('./data-persistence');
+const { pool } = require('../config/database');
 
-// In-memory profile pictures and profiles (kept for backward compatibility)
-const userProfiles = {};
-const profilePictures = {};
+// In-memory storage for development
+const inMemoryProfiles = {};
+const inMemoryJobseekers = {};
 
-/**
- * GET /api/profiles/:user_id - Get user profile
- */
-router.get('/:user_id', (req, res) => {
+// Middleware to verify token (basic check)
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+  req.userId = req.headers.userid || req.body.user_id; // Accept from header or body
+  next();
+};
+
+// GET profile by ID
+router.get('/:userId', async (req, res) => {
   try {
-    const profile = userProfiles[req.params.user_id];
+    const { userId } = req.params;
 
-    if (!profile) {
-      return res.status(404).json({ success: false, message: 'Profile not found' });
+    // Try in-memory first
+    if (inMemoryProfiles[userId]) {
+      return res.json(inMemoryProfiles[userId]);
     }
 
-    res.json({
-      success: true,
-      profile,
-    });
-  } catch (error) {
-    console.error('Error fetching profile:', error);
-    res.status(500).json({ success: false, message: 'Error fetching profile' });
-  }
-});
-
-/**
- * GET /api/profiles/all/list - Get all profiles
- */
-router.get('/all/list', (req, res) => {
-  try {
-    const profiles = dataPersistence.getAllProfiles() || Object.values(userProfiles);
-    res.json({
-      success: true,
-      profiles,
-      total: profiles.length,
-    });
-  } catch (error) {
-    console.error('Error fetching profiles:', error);
-    res.status(500).json({ success: false, message: 'Error fetching profiles' });
-  }
-});
-
-/**
- * GET /api/profiles/new - Get new users
- */
-router.get('/new', (req, res) => {
-  try {
-    const limit = req.query.limit || 10;
-    const newUsers = dataPersistence.getNewUsers(parseInt(limit)) || Object.values(userProfiles).slice(0, limit);
-    res.json({
-      success: true,
-      profiles: newUsers,
-      total: newUsers.length,
-    });
-  } catch (error) {
-    console.error('Error fetching new profiles:', error);
-    res.status(500).json({ success: false, message: 'Error fetching new profiles' });
-  }
-});
-
-/**
- * GET /api/profiles/search - Search profiles
- */
-router.get('/search', (req, res) => {
-  try {
-    const query = req.query.q || '';
-    if (!query || query.length < 2) {
-      return res.json({ success: true, profiles: [], message: 'Query too short' });
+    // Try jobseekers table
+    if (inMemoryJobseekers[userId]) {
+      const profile = inMemoryJobseekers[userId];
+      // Convert to response format
+      const response = {
+        id: profile.user_id,
+        user_name: profile.fullname || profile.user_name,
+        email: profile.email,
+        phone: profile.phone,
+        state: profile.state,
+        lga: profile.lga,
+        bio: profile.bio,
+        skills: profile.skills,
+        experience: profile.experience,
+        qualification: profile.qualification,
+        job_category: profile.job_category || 'Teaching',
+        years_experience: profile.years_experience || 0,
+        education_level: profile.education_level,
+        professional_title: profile.professional_title,
+        employment_type: profile.employment_type,
+        profile_image_url: profile.profile_image_url,
+        star_rating: profile.star_rating || 1,
+        total_followers: profile.total_followers || 0,
+        created_at: profile.created_at,
+      };
+      return res.json(response);
     }
 
-    const results = dataPersistence.searchProfiles(query);
-    res.json({
-      success: true,
-      profiles: results,
-      total: results.length,
-    });
-  } catch (error) {
-    console.error('Error searching profiles:', error);
-    res.status(500).json({ success: false, message: 'Error searching profiles' });
+    res.status(404).json({ message: 'Profile not found' });
+  } catch (err) {
+    console.error('Get profile error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
-/**
- * POST /api/profiles/create - Create or update profile
- * Body: { user_id, user_name, bio, job_category, location, phone }
- */
-router.post('/create', (req, res) => {
+// CREATE initial profile from signup
+router.post('/create', async (req, res) => {
   try {
-    const { user_id, user_name, bio, job_category, location, phone } = req.body;
+    const {
+      user_id,
+      user_name,
+      fullname,
+      email,
+      phone,
+      state,
+      lga,
+      job_category,
+      bio,
+      education_level,
+      years_experience,
+      professional_title,
+      employment_type,
+      profile_image_url,
+    } = req.body;
 
     if (!user_id) {
-      return res.status(400).json({ success: false, message: 'User ID required' });
+      return res.status(400).json({ message: 'user_id is required' });
     }
-
-    const existingProfile = userProfiles[user_id] || dataPersistence.getProfile(user_id);
 
     const profile = {
       user_id,
-      user_name: user_name || 'User',
-      bio: bio || '',
-      job_category: job_category || 'teaching',
-      location: location || 'Nigeria',
-      phone: phone || '',
-      profile_picture: profilePictures[user_id] ? `http://localhost:5001/api/profiles/${user_id}/picture/view` : null,
-      created_at: existingProfile?.created_at || new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      followers: existingProfile?.followers || [],
-      following: existingProfile?.following || [],
-      total_followers: existingProfile?.total_followers || 0,
-      total_following: existingProfile?.total_following || 0,
-      total_posts: existingProfile?.total_posts || 0,
-      total_jobs_posted: existingProfile?.total_jobs_posted || 0,
+      fullname: fullname || user_name,
+      email,
+      phone,
+      state,
+      lga,
+      bio,
+      skills: '',
+      experience: '',
+      qualification: '',
+      job_category: job_category || 'Teaching',
+      years_experience: years_experience || 0,
+      education_level: education_level || '',
+      professional_title: professional_title || '',
+      employment_type: employment_type || '',
+      profile_image_url: profile_image_url || null,
+      star_rating: 1,
+      total_followers: 0,
+      created_at: new Date().toISOString(),
     };
 
-    // Save to both in-memory and data persistence
-    userProfiles[user_id] = profile;
-    dataPersistence.saveProfile(user_id, profile);
+    inMemoryJobseekers[user_id] = profile;
+    inMemoryProfiles[user_id] = profile;
 
-    res.json({
-      success: true,
-      message: 'Profile created/updated successfully',
+    // Try to save to localStorage
+    try {
+      localStorage.setItem(`profile_${user_id}`, JSON.stringify(profile));
+    } catch (e) {
+      console.warn('Could not save to localStorage');
+    }
+
+    res.status(201).json({
+      message: 'Profile created successfully',
       profile,
     });
-  } catch (error) {
-    console.error('Error creating profile:', error);
-    res.status(500).json({ success: false, message: 'Error creating profile' });
+  } catch (err) {
+    console.error('Create profile error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
-/**
- * POST /api/profiles/:user_id/update - Update user profile
- */
-router.post('/:user_id/update', (req, res) => {
+// UPDATE profile
+router.post('/:userId/update', async (req, res) => {
   try {
-    const user_id = req.params.user_id;
-    const { user_name, bio, job_category, location, phone } = req.body;
+    const { userId } = req.params;
+    const { bio, skills, experience, qualification } = req.body;
 
-    if (!userProfiles[user_id]) {
-      return res.status(404).json({ success: false, message: 'Profile not found' });
-    }
-
-    userProfiles[user_id] = {
-      ...userProfiles[user_id],
-      user_name: user_name || userProfiles[user_id].user_name,
-      bio: bio || userProfiles[user_id].bio,
-      job_category: job_category || userProfiles[user_id].job_category,
-      location: location || userProfiles[user_id].location,
-      phone: phone || userProfiles[user_id].phone,
-      updated_at: new Date().toISOString(),
-    };
-
-    res.json({
-      success: true,
-      message: 'Profile updated successfully',
-      profile: userProfiles[user_id],
-    });
-  } catch (error) {
-    console.error('Error updating profile:', error);
-    res.status(500).json({ success: false, message: 'Error updating profile' });
-  }
-});
-
-/**
- * POST /api/profiles/:user_id/picture - Upload profile picture
- * Body: { image_data (base64), mimetype }
- */
-router.post('/:user_id/picture', (req, res) => {
-  try {
-    const { image_data, mimetype } = req.body;
-    const user_id = req.params.user_id;
-
-    if (!image_data) {
-      return res.status(400).json({ success: false, message: 'Image data required' });
-    }
-
-    // Validate image data (simple check)
-    if (image_data.length > 5 * 1024 * 1024) { // 5MB limit
-      return res.status(400).json({ success: false, message: 'Image too large. Max 5MB' });
-    }
-
-    // Store picture reference in both places
-    profilePictures[user_id] = {
-      data: image_data,
-      mimetype: mimetype || 'image/jpeg',
-      uploaded_at: new Date().toISOString(),
-    };
-
-    // Also store in data persistence
-    dataPersistence.savePicture(user_id, image_data);
-
-    // Update profile picture URL
-    if (userProfiles[user_id]) {
-      userProfiles[user_id].profile_picture = `http://localhost:5001/api/profiles/${user_id}/picture/view`;
-      userProfiles[user_id].updated_at = new Date().toISOString();
-      
-      // Also update in data persistence
-      dataPersistence.saveProfile(user_id, userProfiles[user_id]);
-    }
-
-    res.json({
-      success: true,
-      message: 'Profile picture uploaded successfully',
-      picture_url: `http://localhost:5001/api/profiles/${user_id}/picture/view`,
-    });
-  } catch (error) {
-    console.error('Error uploading picture:', error);
-    res.status(500).json({ success: false, message: 'Error uploading picture' });
-  }
-});
-
-/**
- * GET /api/profiles/:user_id/picture/view - View profile picture
- */
-router.get('/:user_id/picture/view', (req, res) => {
-  try {
-    const user_id = req.params.user_id;
-    const picture = profilePictures[user_id];
-
-    if (!picture || !picture.data) {
-      // Return default avatar placeholder
-      return res.status(404).json({
-        success: true,
-        default: true,
-        message: 'No picture uploaded',
-      });
-    }
-
-    res.set('Content-Type', picture.mimetype || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=3600');
-    
-    try {
-      res.send(Buffer.from(picture.data, 'base64'));
-    } catch (e) {
-      // If data is invalid base64, return default
-      return res.status(400).json({ success: false, message: 'Invalid image data' });
-    }
-  } catch (error) {
-    console.error('Error fetching picture:', error);
-    res.status(500).json({ success: false, message: 'Error fetching picture' });
-  }
-});
-
-/**
- * POST /api/profiles/:user_id/follow - Follow user
- * Body: { follower_id, follower_name }
- */
-router.post('/:user_id/follow', (req, res) => {
-  try {
-    const { follower_id, follower_name } = req.body;
-    const user_id = req.params.user_id;
-
-    if (user_id === follower_id) {
-      return res.status(400).json({ success: false, message: 'Cannot follow yourself' });
-    }
-
-    // Initialize profiles if needed
-    if (!userProfiles[user_id]) {
-      userProfiles[user_id] = { user_id, followers: [], following: [] };
-    }
-    if (!userProfiles[follower_id]) {
-      userProfiles[follower_id] = { follower_id, followers: [], following: [] };
-    }
-
-    const profile = userProfiles[user_id];
-    const followerProfile = userProfiles[follower_id];
-
-    // Check if already following
-    const isFollowing = profile.followers.some(f => f.user_id === follower_id);
-
-    if (isFollowing) {
-      // Unfollow
-      profile.followers = profile.followers.filter(f => f.user_id !== follower_id);
-      followerProfile.following = followerProfile.following.filter(f => f.user_id !== user_id);
-      profile.total_followers = Math.max(0, profile.total_followers - 1);
-      followerProfile.total_following = Math.max(0, followerProfile.total_following - 1);
-
-      return res.json({
-        success: true,
-        message: 'Unfollowed',
-        following: false,
-      });
-    } else {
-      // Follow
-      profile.followers.push({
-        user_id: follower_id,
-        user_name: follower_name || 'User',
-        timestamp: new Date().toISOString(),
-      });
-      followerProfile.following.push({
-        user_id,
-        user_name: profile.user_name || 'User',
-        timestamp: new Date().toISOString(),
-      });
-      profile.total_followers = (profile.total_followers || 0) + 1;
-      followerProfile.total_following = (followerProfile.total_following || 0) + 1;
-
-      res.json({
-        success: true,
-        message: 'Followed successfully',
-        following: true,
-        profile,
-      });
-    }
-  } catch (error) {
-    console.error('Error following user:', error);
-    res.status(500).json({ success: false, message: 'Error following user' });
-  }
-});
-
-/**
- * GET /api/profiles/:user_id/followers - Get user followers
- */
-router.get('/:user_id/followers', (req, res) => {
-  try {
-    const profile = userProfiles[req.params.user_id];
-
+    // Get existing profile
+    let profile = inMemoryJobseekers[userId] || inMemoryProfiles[userId];
     if (!profile) {
-      return res.json({
-        success: true,
-        followers: [],
-        total: 0,
-      });
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    // Update fields
+    if (bio !== undefined) profile.bio = bio;
+    if (skills !== undefined) profile.skills = skills;
+    if (experience !== undefined) profile.experience = experience;
+    if (qualification !== undefined) profile.qualification = qualification;
+
+    profile.updated_at = new Date().toISOString();
+
+    // Update in-memory storage
+    inMemoryJobseekers[userId] = profile;
+    inMemoryProfiles[userId] = profile;
+
+    // Try to save to localStorage
+    try {
+      localStorage.setItem(`profile_${userId}`, JSON.stringify(profile));
+    } catch (e) {
+      console.warn('Could not save to localStorage');
     }
 
     res.json({
-      success: true,
-      followers: profile.followers || [],
-      total: profile.total_followers || 0,
+      message: 'Profile updated successfully',
+      profile,
     });
-  } catch (error) {
-    console.error('Error fetching followers:', error);
-    res.status(500).json({ success: false, message: 'Error fetching followers' });
+  } catch (err) {
+    console.error('Update profile error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+// UPDATE profile image
+router.post('/:userId/update-image', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { profile_image_url } = req.body;
+
+    if (!profile_image_url) {
+      return res.status(400).json({ message: 'profile_image_url is required' });
+    }
+
+    let profile = inMemoryJobseekers[userId] || inMemoryProfiles[userId];
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    profile.profile_image_url = profile_image_url;
+    profile.updated_at = new Date().toISOString();
+
+    inMemoryJobseekers[userId] = profile;
+    inMemoryProfiles[userId] = profile;
+
+    try {
+      localStorage.setItem(`profile_${userId}`, JSON.stringify(profile));
+    } catch (e) {
+      console.warn('Could not save to localStorage');
+    }
+
+    res.json({
+      message: 'Profile image updated successfully',
+      profile,
+    });
+  } catch (err) {
+    console.error('Update image error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+// GET all job seekers (for feed/discovery)
+router.get('/', async (req, res) => {
+  try {
+    const profiles = Object.values(inMemoryJobseekers).map(p => ({
+      id: p.user_id,
+      user_name: p.fullname || p.user_name,
+      email: p.email,
+      job_category: p.job_category,
+      profile_image_url: p.profile_image_url,
+      bio: p.bio,
+      star_rating: p.star_rating || 1,
+      created_at: p.created_at,
+    }));
+
+    res.json(profiles);
+  } catch (err) {
+    console.error('Get all profiles error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
