@@ -32,10 +32,11 @@ export default function Navbar() {
         bottom: 0,
         left: 0,
         right: 0,
-        background: '#f0f9ff',
-        borderTop: '1px solid #e5e7eb',
+        background: '#fff9f5',
+        borderTop: '2px solid #ff6b35',
         zIndex: 40,
         paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+        boxShadow: '0 -4px 15px rgba(255, 107, 53, 0.1)',
       },
       grid: {
         display: 'grid',
@@ -53,13 +54,13 @@ export default function Navbar() {
         fontSize: '0.65rem',
         fontWeight: '600',
         textDecoration: 'none',
-        color: '#6b7280',
+        color: '#8b6239',
         transition: 'all 0.2s',
         borderRadius: '0.375rem',
       },
       navItemActive: {
-        color: '#2563eb',
-        background: '#dbeafe',
+        color: '#ff6b35',
+        background: '#ffe8d6',
       },
       icon: {
         fontSize: '1.25rem',
@@ -73,13 +74,13 @@ export default function Navbar() {
       <>
         {/* Top navbar - minimal on mobile */}
         <nav style={{
-          background: 'linear-gradient(to right, #2563eb, #4f46e5)',
+          background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
           color: 'white',
           padding: '1rem',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          boxShadow: '0 4px 15px rgba(255, 107, 53, 0.2)',
           position: 'sticky',
           top: 0,
           zIndex: 50,
@@ -197,7 +198,7 @@ export default function Navbar() {
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    color: '#ef4444',
+                    color: '#ff6b35',
                   }}
                 >
                   <div style={bottomNavStyle.icon}>🚪</div>
@@ -217,9 +218,9 @@ export default function Navbar() {
   // Desktop navbar
   return (
     <nav style={{
-      background: 'linear-gradient(to right, #2563eb, #4f46e5)',
+      background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
       color: 'white',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      boxShadow: '0 4px 15px rgba(255, 107, 53, 0.2)',
       position: 'sticky',
       top: 0,
       zIndex: 50,
@@ -261,7 +262,7 @@ export default function Navbar() {
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 Login
@@ -276,7 +277,7 @@ export default function Navbar() {
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 Job Seeker
@@ -291,7 +292,7 @@ export default function Navbar() {
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 Recruiter
@@ -309,7 +310,7 @@ export default function Navbar() {
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 💼 Matches
@@ -324,7 +325,7 @@ export default function Navbar() {
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 🔍 Jobs
@@ -339,7 +340,7 @@ export default function Navbar() {
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 📢 Feed
@@ -354,7 +355,7 @@ export default function Navbar() {
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 💬 Messages
@@ -369,7 +370,7 @@ export default function Navbar() {
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 👤 Profile
@@ -385,7 +386,7 @@ export default function Navbar() {
                     transition: 'all 0.2s',
                     cursor: 'pointer',
                   }}
-                  onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
+                  onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                   onMouseLeave={(e) => e.target.style.background = 'transparent'}
                 >
                   📝 Post Job
@@ -404,7 +405,7 @@ export default function Navbar() {
                   border: 'none',
                   fontWeight: '600',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#dc2626'}
+                onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
                 onMouseLeave={(e) => e.target.style.background = 'transparent'}
               >
                 Logout

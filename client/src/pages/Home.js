@@ -5,7 +5,7 @@ export default function Home() {
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(to bottom right, #f0f9ff, #e0e7ff)',
+      background: 'linear-gradient(135deg, #fff9f5 0%, #fffaf0 50%, #fef5f1 100%)',
       padding: 0,
       paddingBottom: 'calc(2rem + max(6rem, env(safe-area-inset-bottom)))',
     },
@@ -18,12 +18,15 @@ export default function Home() {
     mainTitle: {
       fontSize: '3rem',
       fontWeight: 'bold',
-      color: '#1e3a8a',
+      background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
       marginBottom: '1rem',
     },
     mainSubtitle: {
       fontSize: '1.25rem',
-      color: '#4b5563',
+      color: '#8b6239',
       marginBottom: '2rem',
     },
     grid2Col: {
@@ -35,8 +38,15 @@ export default function Home() {
     card: {
       background: 'white',
       borderRadius: '0.5rem',
-      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+      boxShadow: '0 4px 15px rgba(255, 107, 53, 0.15)',
       padding: '2rem',
+      borderLeft: '4px solid #ff6b35',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
+    },
+    cardHover: {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 8px 25px rgba(255, 107, 53, 0.25)',
     },
     emoji: {
       fontSize: '3rem',
@@ -45,7 +55,10 @@ export default function Home() {
     cardTitle: {
       fontSize: '1.5rem',
       fontWeight: 'bold',
-      color: '#1e3a8a',
+      background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
       marginBottom: '1rem',
     },
     cardText: {
@@ -59,16 +72,15 @@ export default function Home() {
       borderRadius: '0.375rem',
       textDecoration: 'none',
       fontWeight: 'bold',
-      transition: 'all 0.2s',
+      transition: 'all 0.3s ease',
       cursor: 'pointer',
-    },
-    linkBlue: {
-      background: '#2563eb',
+      background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
       color: 'white',
+      boxShadow: '0 4px 15px rgba(255, 107, 53, 0.3)',
     },
-    linkGreen: {
-      background: '#16a34a',
-      color: 'white',
+    linkHover: {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 6px 20px rgba(255, 107, 53, 0.4)',
     },
     featuresSection: {
       marginTop: '5rem',
@@ -76,7 +88,10 @@ export default function Home() {
     featuresTitle: {
       fontSize: '2rem',
       fontWeight: 'bold',
-      color: '#1e3a8a',
+      background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
       marginBottom: '3rem',
     },
     grid3Col: {
@@ -88,8 +103,14 @@ export default function Home() {
       background: 'white',
       borderRadius: '0.5rem',
       padding: '1.5rem',
-      boxShadow: '0 5px 15px rgba(0,0,0,0.08)',
+      boxShadow: '0 4px 15px rgba(255, 107, 53, 0.1)',
       textAlign: 'center',
+      borderTop: '3px solid #ff6b35',
+      transition: 'all 0.3s ease',
+    },
+    featureCardHover: {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 8px 20px rgba(255, 107, 53, 0.2)',
     },
     featureEmoji: {
       fontSize: '2.5rem',
@@ -99,7 +120,7 @@ export default function Home() {
       fontWeight: 'bold',
       fontSize: '1.125rem',
       marginBottom: '0.5rem',
-      color: '#1e3a8a',
+      color: '#ff6b35',
     },
     featureCardText: {
       color: '#6b7280',
@@ -108,12 +129,16 @@ export default function Home() {
     },
   };
 
+  const [hoveredCard, setHoveredCard] = React.useState(null);
+  const [hoveredFeature, setHoveredFeature] = React.useState(null);
+  const [hoveredButton, setHoveredButton] = React.useState(null);
+
   return (
     <div style={styles.container}>
       {/* Hero Section */}
       <div style={styles.heroSection}>
         <h1 style={styles.mainTitle}>
-          Welcome to FaithJobs
+          Welcome to FaithJobs 🟠
         </h1>
         <p style={styles.mainSubtitle}>
           Connect with teaching and lecturing opportunities across Nigeria's education sector
@@ -121,7 +146,11 @@ export default function Home() {
         
         <div style={styles.grid2Col}>
           {/* Job Seekers Card */}
-          <div style={styles.card}>
+          <div 
+            style={{...styles.card, ...(hoveredCard === 'seeker' ? styles.cardHover : {})}}
+            onMouseEnter={() => setHoveredCard('seeker')}
+            onMouseLeave={() => setHoveredCard(null)}
+          >
             <div style={styles.emoji}>👨‍🏫</div>
             <h2 style={styles.cardTitle}>For Teachers & Lecturers</h2>
             <p style={styles.cardText}>
@@ -129,16 +158,23 @@ export default function Home() {
             </p>
             <Link
               to="/signup/jobseeker"
-              style={{...styles.link, ...styles.linkBlue}}
-              onMouseEnter={(e) => e.target.style.background = '#1d4ed8'}
-              onMouseLeave={(e) => e.target.style.background = '#2563eb'}
+              style={{
+                ...styles.link,
+                ...(hoveredButton === 'seeker' ? styles.linkHover : {}),
+              }}
+              onMouseEnter={() => setHoveredButton('seeker')}
+              onMouseLeave={() => setHoveredButton(null)}
             >
               Join as Job Seeker
             </Link>
           </div>
 
           {/* Recruiters Card */}
-          <div style={styles.card}>
+          <div 
+            style={{...styles.card, ...(hoveredCard === 'recruiter' ? styles.cardHover : {})}}
+            onMouseEnter={() => setHoveredCard('recruiter')}
+            onMouseLeave={() => setHoveredCard(null)}
+          >
             <div style={styles.emoji}>🏫</div>
             <h2 style={styles.cardTitle}>For Schools & Institutions</h2>
             <p style={styles.cardText}>
@@ -146,9 +182,12 @@ export default function Home() {
             </p>
             <Link
               to="/signup/recruiter"
-              style={{...styles.link, ...styles.linkGreen}}
-              onMouseEnter={(e) => e.target.style.background = '#15803d'}
-              onMouseLeave={(e) => e.target.style.background = '#16a34a'}
+              style={{
+                ...styles.link,
+                ...(hoveredButton === 'recruiter' ? styles.linkHover : {}),
+              }}
+              onMouseEnter={() => setHoveredButton('recruiter')}
+              onMouseLeave={() => setHoveredButton(null)}
             >
               Join as Recruiter
             </Link>
@@ -159,17 +198,29 @@ export default function Home() {
         <div style={styles.featuresSection}>
           <h3 style={styles.featuresTitle}>Why Choose FaithJobs?</h3>
           <div style={styles.grid3Col}>
-            <div style={styles.featureCard}>
+            <div 
+              style={{...styles.featureCard, ...(hoveredFeature === 'rating' ? styles.featureCardHover : {})}}
+              onMouseEnter={() => setHoveredFeature('rating')}
+              onMouseLeave={() => setHoveredFeature(null)}
+            >
               <div style={styles.featureEmoji}>⭐</div>
               <h4 style={styles.featureCardTitle}>Star Rating System</h4>
               <p style={styles.featureCardText}>Get rated based on your credentials, experience, and qualifications.</p>
             </div>
-            <div style={styles.featureCard}>
+            <div 
+              style={{...styles.featureCard, ...(hoveredFeature === 'verified' ? styles.featureCardHover : {})}}
+              onMouseEnter={() => setHoveredFeature('verified')}
+              onMouseLeave={() => setHoveredFeature(null)}
+            >
               <div style={styles.featureEmoji}>🔒</div>
               <h4 style={styles.featureCardTitle}>Verified Profiles</h4>
               <p style={styles.featureCardText}>All profiles are verified with credentials and ID uploads for trust.</p>
             </div>
-            <div style={styles.featureCard}>
+            <div 
+              style={{...styles.featureCard, ...(hoveredFeature === 'coverage' ? styles.featureCardHover : {})}}
+              onMouseEnter={() => setHoveredFeature('coverage')}
+              onMouseLeave={() => setHoveredFeature(null)}
+            >
               <div style={styles.featureEmoji}>🌍</div>
               <h4 style={styles.featureCardTitle}>Nationwide Coverage</h4>
               <p style={styles.featureCardText}>Access opportunities across all 36 states + FCT Abuja.</p>
