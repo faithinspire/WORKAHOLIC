@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const path = require('path');
 require('dotenv').config();
 
+// Initialize Supabase
+const supabaseServer = require('./utils/supabaseServer');
+
 const app = express();
 
 // Middleware
@@ -26,7 +29,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Health check endpoint (FIRST - no dependencies)
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'FaithJobs API is running', timestamp: new Date() });
+  const dbStatus = supabaseServer.getConnectionStatus();
+  res.json({ 
+    status: 'FaithJobs API is running', 
+    timestamp: new Date(),
+    database: dbStatus.connected ? 'connected' : 'disconnected',
+    supabaseStatus: dbStatus
+  });
+});
+
+// Supabase connection status endpoint
+app.get('/api/supabase-status', (req, res) => {
+  const status = supabaseServer.getConnectionStatus();
+  res.json({
+    connected: status.connected,
+    lastChecked: status.lastChecked,
+    error: status.error,
+    timestamp: new Date()
+  });
 });
 
 // Home route with cache control
@@ -172,6 +192,22 @@ try {
   console.log('✓ Dashboard routes loaded');
 } catch (err) {
   console.error('✗ Error loading dashboard routes:', err.message);
+}
+
+try {
+  const jobsSeoRoutes = require('./routes/jobs-seo');
+  app.use('/api/jobs-seo', jobsSeoRoutes);
+  console.log('✓ Jobs SEO routes loaded');
+} catch (err) {
+  console.error('✗ Error loading jobs-seo routes:', err.message);
+}
+
+try {
+  const jobsLandingRoutes = require('./routes/jobs-landing');
+  app.use('/api/jobs-landing', jobsLandingRoutes);
+  console.log('✓ Jobs landing routes loaded');
+} catch (err) {
+  console.error('✗ Error loading jobs-landing routes:', err.message);
 }
 
 // 404 handler

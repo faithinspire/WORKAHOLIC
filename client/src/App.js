@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -16,12 +16,49 @@ import JobMatches from './pages/JobMatches';
 import MyPortfolio from './pages/MyPortfolio';
 import Applications from './pages/Applications';
 import SavedJobs from './pages/SavedJobs';
+import JobDetail from './pages/JobDetail';
+import ApplicationSuccess from './pages/ApplicationSuccess';
+import ProgrammaticLandingPage from './pages/ProgrammaticLandingPage';
+import { supabaseHelpers } from './utils/supabaseClient';
 
 function App() {
+  const [supabaseConnected, setSupabaseConnected] = useState(false);
+  const [connectionError, setConnectionError] = useState(null);
+
+  useEffect(() => {
+    // Test Supabase connection on app load
+    const checkConnection = async () => {
+      try {
+        const isConnected = await supabaseHelpers.testConnection();
+        setSupabaseConnected(isConnected);
+        if (isConnected) {
+          console.log('✅ App initialized with Supabase connected');
+        } else {
+          setConnectionError('Failed to connect to Supabase');
+        }
+      } catch (err) {
+        console.error('Connection check error:', err);
+        setConnectionError(err.message);
+      }
+    };
+
+    checkConnection();
+  }, []);
+
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
+        {/* Connection Status Banner */}
+        {!supabaseConnected && (
+          <div className="w-full bg-gradient-orange-primary text-white px-4 py-3 text-center">
+            <p className="text-sm font-medium">
+              ⚠️ Database connection: {connectionError || 'Connecting...'}
+            </p>
+          </div>
+        )}
+        
         <Navbar />
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup/jobseeker" element={<SignupJobSeeker />} />
@@ -38,6 +75,14 @@ function App() {
           <Route path="/my-portfolio" element={<MyPortfolio />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/saved-jobs" element={<SavedJobs />} />
+          
+          {/* SEO & Virality Routes */}
+          <Route path="/jobs/:slug" element={<JobDetail />} />
+          <Route path="/jobs/id/:id" element={<JobDetail />} />
+          <Route path="/application-success/:applicationId" element={<ApplicationSuccess />} />
+          <Route path="/jobs/:role" element={<ProgrammaticLandingPage />} />
+          <Route path="/jobs/:role/:location" element={<ProgrammaticLandingPage />} />
+          <Route path="/locations/:location" element={<ProgrammaticLandingPage />} />
         </Routes>
       </div>
     </Router>

@@ -1,268 +1,232 @@
+/**
+ * Supabase Database Initialization
+ * Initializes connection and provides query helpers
+ */
+
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.SUPABASE_URL || 'https://zzpxjmmtlophkllboncl.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6cHhqbW10bG9waGtsbGJvbmNsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTM0MzIyMywiZXhwIjoyMDk2OTE5MjIzfQ.rxdEi2xwDacskFUVU92LApeGc8Ysnxdh5Gmyjp72t-o';
 
-// Initialize Supabase client
-let supabase = null;
+// Create Supabase client
+const supabase = createClient(supabaseUrl, supabaseKey, {
+  db: {
+    schema: 'public'
+  },
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true
+  }
+});
 
-try {
-    if (SUPABASE_URL && SUPABASE_KEY) {
-        supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-        console.log('✅ Supabase client initialized');
-    } else {
-        console.warn('⚠️  Supabase credentials missing from .env');
-    }
-} catch (err) {
-    console.warn('⚠️  Error initializing Supabase client:', err.message);
-}
+console.log('✅ Supabase client created successfully');
 
-// Initialize all required tables in Supabase (async)
-async function initializeDatabase() {
-    try {
-        if (!supabase) {
-            console.log('⚠️  Supabase not initialized - using fallback storage');
-            return null;
-        }
-
-        console.log('🗄️  Initializing Supabase Database...');
-        console.log('URL:', SUPABASE_URL);
-
-        // Test connection
-        const { data: users, error: testError } = await supabase
-            .from('users')
-            .select('count')
-            .limit(1);
-
-        if (testError) {
-            console.log('⚠️  Error testing Supabase connection:', testError.message);
-        } else {
-            console.log('✅ Connected to Supabase successfully');
-        }
-
-        return supabase;
-    } catch (error) {
-        console.error('❌ Database initialization error:', error.message);
-        return null;
-    }
-}
-
-/**
- * Save user to Supabase
- */
-async function saveUser(userData) {
-    try {
-        if (!supabase) return null;
-
-        const { data, error } = await supabase
-            .from('users')
-            .insert([userData])
-            .select();
-
-        if (error) {
-            console.log('⚠️  Could not save to Supabase:', error.message);
-            return null;
-        }
-
-        console.log('✅ User saved to Supabase');
-        return data[0];
-    } catch (error) {
-        console.error('Error saving user:', error);
-        return null;
-    }
-}
-
-/**
- * Get user from Supabase
- */
-async function getUser(email) {
-    try {
-        if (!supabase) return null;
-
-        const { data, error } = await supabase
-            .from('users')
-            .select('*')
-            .eq('email', email)
-            .single();
-
-        if (error && error.code !== 'PGRST116') {
-            console.log('⚠️  Error fetching user:', error.message);
-            return null;
-        }
-
-        return data;
-    } catch (error) {
-        console.error('Error getting user:', error);
-        return null;
-    }
-}
-
-/**
- * Save portfolio to Supabase
- */
-async function savePortfolio(portfolioData) {
-    try {
-        if (!supabase) return null;
-
-        const { data, error } = await supabase
-            .from('portfolios')
-            .upsert([portfolioData])
-            .select();
-
-        if (error) {
-            console.log('⚠️  Could not save portfolio:', error.message);
-            return null;
-        }
-
-        console.log('✅ Portfolio saved to Supabase');
-        return data[0];
-    } catch (error) {
-        console.error('Error saving portfolio:', error);
-        return null;
-    }
-}
-
-/**
- * Get portfolio from Supabase
- */
-async function getPortfolio(userId) {
-    try {
-        if (!supabase) return null;
-
-        const { data, error } = await supabase
-            .from('portfolios')
-            .select('*')
-            .eq('user_id', userId)
-            .single();
-
-        if (error && error.code !== 'PGRST116') {
-            console.log('⚠️  Error fetching portfolio:', error.message);
-            return null;
-        }
-
-        return data;
-    } catch (error) {
-        console.error('Error getting portfolio:', error);
-        return null;
-    }
-}
-
-/**
- * Save comment to Supabase
- */
-async function saveComment(commentData) {
-    try {
-        if (!supabase) return null;
-
-        const { data, error } = await supabase
-            .from('comments')
-            .insert([commentData])
-            .select();
-
-        if (error) {
-            console.log('⚠️  Could not save comment:', error.message);
-            return null;
-        }
-
-        console.log('✅ Comment saved to Supabase');
-        return data[0];
-    } catch (error) {
-        console.error('Error saving comment:', error);
-        return null;
-    }
-}
-
-/**
- * Get comments for a post
- */
-async function getComments(postId) {
-    try {
-        if (!supabase) return [];
-
-        const { data, error } = await supabase
-            .from('comments')
-            .select('*')
-            .eq('post_id', postId)
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            console.log('⚠️  Error fetching comments:', error.message);
-            return [];
-        }
-
-        return data || [];
-    } catch (error) {
-        console.error('Error getting comments:', error);
-        return [];
-    }
-}
-
-/**
- * Save job request to Supabase
- */
-async function saveJobRequest(requestData) {
-    try {
-        if (!supabase) return null;
-
-        const { data, error } = await supabase
-            .from('job_requests')
-            .insert([requestData])
-            .select();
-
-        if (error) {
-            console.log('⚠️  Could not save job request:', error.message);
-            return null;
-        }
-
-        console.log('✅ Job request saved to Supabase');
-        return data[0];
-    } catch (error) {
-        console.error('Error saving job request:', error);
-        return null;
-    }
-}
-
-/**
- * Get job requests for recruiter
- */
-async function getJobRequests(recruiterId) {
-    try {
-        if (!supabase) return [];
-
-        const { data, error } = await supabase
-            .from('job_requests')
-            .select('*')
-            .eq('recruiter_id', recruiterId)
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            console.log('⚠️  Error fetching job requests:', error.message);
-            return [];
-        }
-
-        return data || [];
-    } catch (error) {
-        console.error('Error getting job requests:', error);
-        return [];
-    }
-}
-
-// Initialize on module load (async)
+// Test connection
 (async () => {
-    if (supabase) {
-        await initializeDatabase();
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('count()', { count: 'exact' })
+      .limit(1);
+
+    if (error) {
+      console.warn('⚠️  Supabase test query failed:', error.message);
+    } else {
+      console.log('✅ Connected to Supabase successfully');
     }
+  } catch (err) {
+    console.warn('⚠️  Supabase connection warning:', err.message);
+  }
 })();
 
+// Helper function to safely query Supabase
+async function query(table, operation = 'select', options = {}) {
+  try {
+    switch (operation.toLowerCase()) {
+      case 'select':
+        return await supabase
+          .from(table)
+          .select(options.select || '*', options.selectOptions)
+          .range(options.offset || 0, (options.offset || 0) + (options.limit || 100) - 1);
+
+      case 'insert':
+        return await supabase
+          .from(table)
+          .insert(options.data)
+          .select();
+
+      case 'update':
+        return await supabase
+          .from(table)
+          .update(options.data)
+          .eq(options.match_field || 'id', options.match_value)
+          .select();
+
+      case 'delete':
+        return await supabase
+          .from(table)
+          .delete()
+          .eq(options.match_field || 'id', options.match_value);
+
+      default:
+        throw new Error(`Unknown operation: ${operation}`);
+    }
+  } catch (err) {
+    console.error(`Supabase query error on ${table}:`, err.message);
+    throw err;
+  }
+}
+
+// Export Supabase client and helper
 module.exports = {
-    supabase,
-    saveUser,
-    getUser,
-    savePortfolio,
-    getPortfolio,
-    saveComment,
-    getComments,
-    saveJobRequest,
-    getJobRequests,
+  supabase,
+  query,
+  
+  // Specific helpers for common operations
+  
+  async getProfiles(limit = 100, offset = 0) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .range(offset, offset + limit - 1)
+      .order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  async getProfileById(id) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', id)
+      .single();
+    return { data, error };
+  },
+
+  async upsertProfile(profile) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .upsert([profile])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async getJobs(limit = 50, offset = 0, filters = {}) {
+    let query = supabase
+      .from('jobs')
+      .select('*')
+      .range(offset, offset + limit - 1);
+
+    if (filters.status) query = query.eq('status', filters.status);
+    if (filters.recruiter_id) query = query.eq('recruiter_id', filters.recruiter_id);
+    if (filters.location) query = query.ilike('location', `%${filters.location}%`);
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  async getJobById(id) {
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('id', id)
+      .single();
+    return { data, error };
+  },
+
+  async createJob(job) {
+    const { data, error } = await supabase
+      .from('jobs')
+      .insert([{ ...job, created_at: new Date(), status: 'active' }])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async updateJob(id, updates) {
+    const { data, error } = await supabase
+      .from('jobs')
+      .update({ ...updates, updated_at: new Date() })
+      .eq('id', id)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async deleteJob(id) {
+    const { error } = await supabase
+      .from('jobs')
+      .delete()
+      .eq('id', id);
+    return { error };
+  },
+
+  async getApplications(filters = {}) {
+    let query = supabase
+      .from('applications')
+      .select('*');
+
+    if (filters.job_id) query = query.eq('job_id', filters.job_id);
+    if (filters.user_id) query = query.eq('user_id', filters.user_id);
+    if (filters.status) query = query.eq('status', filters.status);
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  async submitApplication(application) {
+    const { data, error } = await supabase
+      .from('applications')
+      .insert([{ ...application, created_at: new Date(), status: 'pending' }])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async getMessages(conversationId, limit = 50) {
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('conversation_id', conversationId)
+      .order('created_at', { ascending: true })
+      .limit(limit);
+    return { data, error };
+  },
+
+  async sendMessage(message) {
+    const { data, error } = await supabase
+      .from('messages')
+      .insert([{ ...message, created_at: new Date() }])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async getFeeds(limit = 50, offset = 0) {
+    const { data, error } = await supabase
+      .from('feeds')
+      .select('*')
+      .range(offset, offset + limit - 1)
+      .order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  async createPost(post) {
+    const { data, error } = await supabase
+      .from('feeds')
+      .insert([{ ...post, created_at: new Date() }])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async searchJobs(searchQuery, limit = 20) {
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,location.ilike.%${searchQuery}%`)
+      .limit(limit);
+    return { data, error };
+  }
 };
